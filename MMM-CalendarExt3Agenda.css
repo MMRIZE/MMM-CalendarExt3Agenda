@@ -1,0 +1,199 @@
+#CX3A_MAGIC {
+  display:none;
+}
+.CX3A {
+  font-size: 16px;
+  min-width: 300px;
+  max-width: 400px;
+  max-height: 600px;
+  overflow-y: hidden;
+  text-align: left;
+  position: relative;
+  color: lightgray;
+
+}
+
+.CX3A::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 20%;
+  width: 100%;
+  content: ' ';
+  background-image: linear-gradient(to bottom, transparent, black);
+
+}
+
+.CX3A .cellBody {
+  line-height: 105%;
+}
+
+
+.CX3A .cellHeader{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.CX3A .cellHeaderMain {
+  display: flex;
+  gap: 3px;
+  text-transform: uppercase;
+}
+
+.CX3A .cellDay {
+  font-weight: bold;
+  color: white;
+}
+
+
+.CX3A .cell.weekday_6 .cellDay {
+  color: slateblue;
+}
+
+.CX3A .cell.weekday_0 .cellDay {
+  color: crimson;
+}
+
+.CX3A .cell.today .cellDay {
+  color: gold;
+}
+
+.CX3A .cell.today .cellHeader {
+  color: gold;
+}
+
+.CX3A .cellHeader .cw {
+  display: none;
+}
+
+.CX3A .cellBody .fullday {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.CX3A .event .headline {
+  display: flex;
+  justify-content: flex-start;
+  gap: 5px;
+  align-items: baseline;
+}
+
+.CX3A .event .title {
+  color: white;
+}
+
+.CX3A .cellBody .fullday .event {
+  background-color: var(--calendarColor);
+  border-radius: 5px;
+  padding: 2px 5px;
+  display: inline-block;
+  font-size: 90%;
+  line-height: 100%;
+  max-width: 50%;
+}
+
+.CX3A .cellBody .fullday .event .title {
+  color: var(--oppositeColor);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.CX3A .cellBody .fullday .event > :not(.headline) {
+  display: none;
+}
+
+.CX3A .cellBody .fullday .event .headline :not(.title) {
+  display: none;
+}
+
+
+.CX3A .cellWeather {
+  display: flex;
+  justify-content: flex-end;
+  align-self: center;
+}
+
+.CX3A .cellWeather .temperature {
+  margin-right: 5px;
+}
+
+.CX3A .cellWeather .temperature::after {
+  content: '°'
+}
+
+.CX3A .cellWeather .maxTemp {
+  font-weight: bold;
+}
+
+.CX3A .cellWeather .wi:before {
+  vertical-align: text-bottom;
+}
+
+.CX3A .cellBody {
+  padding-bottom: 2px;
+  border-bottom: 1px solid gray;
+  margin-bottom: 2px;
+}
+
+.CX3A .event .description {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  font-size: 90%;
+  color: lightgray;
+  padding-left: 20px;
+}
+
+.CX3A .event .location {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  font-size: 80%;
+  color: darkgray;
+  text-align: right;
+}
+
+.CX3A .event .time {
+  font-size: 75%;
+  vertical-align: text-bottom;
+}
+
+.CX3A .event .time.notInDay {
+  display: none;
+}
+
+
+.CX3A .event .startTime::after {
+  content: ' -';
+}
+
+.CX3A .event .startTime.notInDay + .endTime.inDay::before {
+  content: '- ';
+}
+
+.CX3A .event .headline .symbol {
+  color: var(--calendarColor);
+  font-size: 75%;
+  vertical-align: text-bottom;
+}
+
+.CX3A .event .headline .symbol.noSymbol::after {
+  content: '⬤';
+}
+
+.CX3A .event.passed {
+  filter: brightness(0.6) grayscale(0.33);
+}
+
+.CX3A .event.current {
+  filter: saturate(2);
+  font-weight: bold;
+}
