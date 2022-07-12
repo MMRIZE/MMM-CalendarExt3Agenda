@@ -42,7 +42,7 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     waitFetch: 1000 *  5,
     // glanceTime: 1000 * 60,
-    // animationSpeed: 1000,
+    animationSpeed: 1000,
 
     useSymbol: true,
     useWeather: true,
@@ -248,7 +248,6 @@ Module.register('MMM-CalendarExt3Agenda', {
     }
 
     const makeEventDataDom = (event, tm) => {
-      console.log(event)
       let eDom = document.createElement('div')
       eDom.dataset.calendarSeq = event?.calendarSeq ?? 0
       eDom.dataset.calendarName = event.calendarName
