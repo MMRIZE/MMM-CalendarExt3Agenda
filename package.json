@@ -1,0 +1,24 @@
+{
+  "name": "mmm-calendarext3agenda",
+  "version": "1.0.0",
+  "description": "Daily agenda view module of MagicMirror",
+  "main": "MMM-CalendarExt3Agenda",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MMRIZE/MMM-CalendarExt3Agenda.git"
+  },
+  "keywords": [
+    "magicmirror",
+    "calendar",
+    "agenda"
+  ],
+  "author": "eouia0819@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MMRIZE/MMM-CalendarExt3Agenda/issues"
+  },
+  "homepage": "https://github.com/MMRIZE/MMM-CalendarExt3Agenda#readme"
+}
