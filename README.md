@@ -97,12 +97,7 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`minimalDaysOfNewYear` | 4 | ISO 8601 also says **each week's year is the Gregorian year in which the Thursday falls**. The first week of the year, hence, always contains 4 January. However, the US (Yes, it is.) system differs from standards. In the US, **containing 1 January** defines the first week. In that case, set this value to `1`. And under some other culture, you might need to modify this.  <br> **This option is only for using `calendarweek (CW)` showing. That is hidden by default, so you can ignore this.**|
 |`cellDateOptions` | {month: 'short', <br>day: 'numeric'} | The format of day cell date. It varies by the `locale` and this option. <br>`locale:'en-US'`, the default displaying will be `Jun 1`. <br> See [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters) | 
 |`eventTimeOptions` | {timeStyle: 'short'} | The format of event time. It varies by the `locale` and this option. <br> `locale:'en-US'`, the default displaying will be `3:45 pm`.<br> See [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters) | 
-|`cellDayOptions`|{<br>
-      '-1': { numeric: 'auto', style: 'long' },<br>
-      '0': { numeric: 'auto', style: 'long' },<br>
-      '1': { numeric: 'auto', style: 'long' },<br>
-      'others': { weekday: 'long' }<br>
-    }| The format of cell title. ... Just leave it. |
+|`cellDayOptions`|{ <br>'-1': { numeric: 'auto', style: 'long' }, <br>'0': { numeric: 'auto', style: 'long' }, <br>'1': { numeric: 'auto', style: 'long' }, <br>'others': { weekday: 'long' } <br>}| The format of cell title. ... Just leave it. |
 |`eventFitler`| callback function | See the `Filtering` part.|
 |`eventTransformer`| callback function | See the `Transforming` part.|
 |`waitFetch`| 5000 | (ms) waiting the fetching of last calendar to prevent flickering view by too frequent fetching. |
