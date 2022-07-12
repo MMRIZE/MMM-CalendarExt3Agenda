@@ -131,12 +131,13 @@ You can handle almost all of the visual things with CSS. See the `MMM-CalendarEx
         - `.dateParts`
       - `.cw` (hidden by default)
     - `.cellHeaderSub`
-      -`.cellWeather`
-        -`.maxTemp.temperature`
-        -`.minTemp.temperature`
-        -`.wi`
+    	- `.cellWeather`
+        - `.maxTemp.temperature`
+        - `.minTemp.temperature`
+        - `.wi`
   - `.cellBody` (events would be located here)
   - `.cellFooter` (currently not used)
+
 - `.cellDay`, `.cellDate` : Displaying date of the cell. The date would have many parts of date/hour information(`.dateParts`).
 
 - `.event` : Every event has this selector. Each event could have these class name together by its condition.
@@ -148,12 +149,12 @@ And `event` also has `dataSet` (`data-*`) as its attributes. (e.g. data-title=".
 
 - `.event`
   - `.headline`
-    -`.symbol`
-    -`.time.startTime`
+    - `.symbol`
+    - `.time.startTime`
       - `.dateParts`
-    -`.time.endTime`
+    - `.time.endTime`
       - `.dateParts`
-    -`.title`
+    - `.title`
   - `.description`
   - `.location`
 
