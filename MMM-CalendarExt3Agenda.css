@@ -1,4 +1,4 @@
-#CX3A_MAGIC {
+.CX3A_MAGIC {
   display:none;
 }
 .CX3A {
@@ -29,7 +29,7 @@
 }
 
 
-.CX3A .cellHeader{
+.CX3A .cellHeader {
   display: flex;
   justify-content: space-between;
   width: 100%;

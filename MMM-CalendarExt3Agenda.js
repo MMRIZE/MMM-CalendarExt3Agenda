@@ -89,7 +89,6 @@ Module.register('MMM-CalendarExt3Agenda', {
       let magic = document.createElement('div')
       magic.id = 'CX3A_MAGIC'
       document.getElementsByTagName('body')[0].appendChild(magic)
-
     }
 
     if (notification === 'CALENDAR_EVENTS') {
@@ -127,6 +126,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     }
 */
     if (notification === 'WEATHER_UPDATED') {
+      console.log(payload)
       if (
         (this.config.useWeather && ((this.config.weatherLocationName && this.config.weatherLocationName === payload.locationName) || !this.config.weatherLocationName))
         && (Array.isArray(payload?.forecastArray) && payload?.forecastArray.length)
@@ -143,6 +143,9 @@ Module.register('MMM-CalendarExt3Agenda', {
   getDom: function() {
     let dom = document.createElement('div')
     dom.classList.add('bodice', 'CX3A_' + this.instanceId, 'CX3A')
+    
+    
+
     /*
     if (this.config.fontSize) dom.style.setProperty('--fontsize', this.config.fontSize)
     dom.style.setProperty('--maxeventlines', this.config.maxEventLines)
@@ -172,6 +175,10 @@ Module.register('MMM-CalendarExt3Agenda', {
       return rl
     }
     dom.innerHTML = ''
+    let magic = document.createElement('div')
+    magic.classList.add('CX3A_MAGIC')
+    magic.id = 'CX3A_MAGIC_' + this.id
+    dom.appendChild(magic)
 
     const isToday = (d) => {
       let tm = new Date()
@@ -323,7 +330,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       eDom.appendChild(location)
       eDom.classList.add('event')
 
-      let magic = document.getElementById('CX3A_MAGIC')
+      let magic = document.getElementById('CX3A_MAGIC_' + this.id)
       magic.style.color = event.color
       let l = getL(window.getComputedStyle(magic).getPropertyValue('color'))
       eDom.style.setProperty('--oppositeColor', (l > 60) ? 'black' : 'white')
