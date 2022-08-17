@@ -4,65 +4,49 @@ Module.register('MMM-CalendarExt3Agenda', {
   defaults: {
     locale: null, // 'de' or 'en-US' or prefer array like ['en-CA', 'en-US', 'en']
     calendarSet: [],
-
     startDayIndex: 0,
     endDayIndex: 10,
-
-
-
-    // mode: 'week', // or 'month'
-    // weekIndex: -1, // Which week from this week starts in a view. Ignored on mode 'month' 
-    // weeksInView: 3, //  How many weeks will be displayed. Ignored on mode 'month'
-
     instanceId: null,
     
     firstDayOfWeek: 1, // 0: Sunday, 1: Monday
     minimalDaysOfNewYear: 4, // When the first week of new year starts in your country.
-
     cellDayOptions: {
       '-1': { numeric: 'auto', style: 'long' },
       '0': { numeric: 'auto', style: 'long' },
       '1': { numeric: 'auto', style: 'long' },
       'others': { weekday: 'long' }
     },
-
     cellDateOptions: {
       month: 'short',
       day: 'numeric'
     },
-
     eventTimeOptions: {
       timeStyle: 'short'
     },
-    
     eventFilter: (ev) => { return true },
     eventTransformer: (ev) => { return ev },
-
     refreshInterval: 1000 * 60 * 30,
-
     waitFetch: 1000 *  5,
-    // glanceTime: 1000 * 60,
     animationSpeed: 1000,
-
     useSymbol: true,
     useWeather: true,
     weatherLocationName: null,
+    showMiniMonthCalendar: true,
+    miniMonthTitleOptions: {
+      month: 'long',
+      year: 'numeric'
+    },
+    miniMonthWeekdayOptions: {
+      weekday: 'short'
+    }
   },
 
   getStyles: function () {
     return ['MMM-CalendarExt3Agenda.css']
   },
 
-
   getMoment: function() {
     return new Date()
-    /*
-    let moment = (this.tempMoment) ? new Date(this.tempMoment.valueOf()) : new Date()
-    moment = (this.mode === 'month') ?
-      new Date(moment.getFullYear(), moment.getMonth() + (this.stepIndex), 1) :
-      new Date(moment.getFullYear(), moment.getMonth(), moment.getDate() + (7 * this.stepIndex))
-    return moment
-    */
   },
 
   start: function() {
@@ -83,12 +67,6 @@ Module.register('MMM-CalendarExt3Agenda', {
       this.stepIndex = 0
       this.tempMoment = null
       this.updateDom(this.config.animationSpeed)
-    }
-
-    if (notification === 'DOM_OBJECTS_CREATED') {
-      let magic = document.createElement('div')
-      magic.id = 'CX3A_MAGIC'
-      document.getElementsByTagName('body')[0].appendChild(magic)
     }
 
     if (notification === 'CALENDAR_EVENTS') {
@@ -115,18 +93,8 @@ Module.register('MMM-CalendarExt3Agenda', {
         this.updateDom(this.config.animationSpeed)
       }, this.config.waitFetch)      
     }
-/*
-    if (notification === 'CX3_SET_DATE') {
-      if (payload?.instanceId === this.config.instanceId || !payload?.instanceId) {
-        this.tempMoment = new Date(payload?.date ?? null)
-        this.stepIndex = 0
-        this.updateDom(this.config.animationSpeed)
-        this.viewTimer = setTimeout(resetCalendar, this.config.glanceTime)
-      } 
-    }
-*/
+
     if (notification === 'WEATHER_UPDATED') {
-      console.log(payload)
       if (
         (this.config.useWeather && ((this.config.weatherLocationName && this.config.weatherLocationName === payload.locationName) || !this.config.weatherLocationName))
         && (Array.isArray(payload?.forecastArray) && payload?.forecastArray.length)
@@ -143,14 +111,6 @@ Module.register('MMM-CalendarExt3Agenda', {
   getDom: function() {
     let dom = document.createElement('div')
     dom.classList.add('bodice', 'CX3A_' + this.instanceId, 'CX3A')
-    
-    
-
-    /*
-    if (this.config.fontSize) dom.style.setProperty('--fontsize', this.config.fontSize)
-    dom.style.setProperty('--maxeventlines', this.config.maxEventLines)
-    dom.style.setProperty('--eventheight', this.config.eventHeight)
-    */
     dom = this.draw(dom, this.activeConfig)
     this.refreshTimer = setTimeout(() => {
       clearTimeout(this.refreshTimer)
@@ -177,7 +137,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     dom.innerHTML = ''
     let magic = document.createElement('div')
     magic.classList.add('CX3A_MAGIC')
-    magic.id = 'CX3A_MAGIC_' + this.id
+    magic.id = 'CX3A_MAGIC_' + this.instanceId
     dom.appendChild(magic)
 
     const isToday = (d) => {
@@ -229,12 +189,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     const getBeginOfWeek = (d) => {
       return new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() - config.firstDayOfWeek + 7 ) % 7)
     }
-/*
-    const getEndOfWeek = (d) => {
-      let b = getBeginOfWeek(d)
-      return new Date(b.getFullYear(), b.getMonth(), b.getDate() + 6, 23, 59, 59, 999)
-    }
-*/
+
     const getWeekNo = (d) => {
       let bow = getBeginOfWeek(d)
       let fw = getBeginOfWeek(new Date(d.getFullYear(), 0, config.minimalDaysOfNewYear))
@@ -256,8 +211,9 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     const makeEventDataDom = (event, tm) => {
       let eDom = document.createElement('div')
+
       eDom.dataset.calendarSeq = event?.calendarSeq ?? 0
-      eDom.dataset.calendarName = event.calendarName
+      event.calendarName ? (eDom.dataset.calendarName = event.calendarName) : null 
       eDom.dataset.color = event.color
       eDom.dataset.description = event.description || ''
       eDom.dataset.title = event.title
@@ -268,7 +224,8 @@ Module.register('MMM-CalendarExt3Agenda', {
       eDom.dataset.endDate = event.endDate
       eDom.dataset.symbol = event.symbol.join(' ')
       eDom.dataset.today = event.today
-      eDom.classList.add('calendar_' + encodeURI(event.calendarName))
+      
+      event.calendarName ? eDom.classList.add('calendar_' + encodeURI(event.calendarName)) : null
       if (event?.class) eDom.classList.add(event.class)
       if (event.fullDayEvent) eDom.classList.add('fullday')
       if (event.isPassed) eDom.classList.add('passed')
@@ -330,7 +287,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       eDom.appendChild(location)
       eDom.classList.add('event')
 
-      let magic = document.getElementById('CX3A_MAGIC_' + this.id)
+      let magic = document.getElementById('CX3A_MAGIC_' + this.instanceId)
       magic.style.color = event.color
       let l = getL(window.getComputedStyle(magic).getPropertyValue('color'))
       eDom.style.setProperty('--oppositeColor', (l > 60) ? 'black' : 'white')
@@ -386,7 +343,6 @@ Module.register('MMM-CalendarExt3Agenda', {
       cwDom.innerHTML = String(getWeekNo(tm))
       cwDom.classList.add('cw')
       m.appendChild(cwDom)
-
       h.appendChild(m)
 
       let s = document.createElement('div')
@@ -414,7 +370,6 @@ Module.register('MMM-CalendarExt3Agenda', {
       }
       h.appendChild(s)
 
-      
       let b = document.createElement('div')
       b.classList.add('cellBody')
 
@@ -427,8 +382,6 @@ Module.register('MMM-CalendarExt3Agenda', {
       return cell
     }
 
-   
-    
     let moment = this.getMoment()
 
     let boc = getRelativeDate(moment, config.startDayIndex)
@@ -453,16 +406,6 @@ Module.register('MMM-CalendarExt3Agenda', {
       ev.isMultiday = isMultiday(ev)
       return ev
     })
-    /*
-    .sort((a, b) => {
-      let aDur = a.endDate - a.startDate
-      let bDur = b.endDate - b.startDate
-
-      return ((a.isFullday || a.isMultiday) && (b.isFullday || b.isMultiday)) 
-        ? bDur - aDur
-        : ((a.startDate === b.startDate) ? a.endDate - b.endDate : a.startDate - b.startDate)
-    })
-    */
 
     if (typeof config.eventFilter === 'function') {
       events = events.filter((ev) => {
@@ -478,6 +421,113 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     let cm = new Date(moment.getFullYear(), moment.getMonth(), moment.getDate())
 
+    const drawMiniMonth = (dom, cm, events = []) => {
+      if (!this.config.showMiniMonthCalendar) return dom
+
+      let bwoc = getBeginOfWeek(new Date(cm.getFullYear(), cm.getMonth(), 1))
+      let ewoc = getBeginOfWeek(new Date(cm.getFullYear(), cm.getMonth() + 1, 0))
+
+      let im = new Date(bwoc.getTime())
+      let today = new Date()
+
+      let view = document.createElement('table')
+      view.classList.add('miniMonth')
+      let caption = document.createElement('caption')
+      caption.innerHTML = new Intl.DateTimeFormat(this.locale, config.miniMonthTitleOptions).formatToParts(cm).reduce((prev, cur, curIndex, arr) => {
+        prev = prev + `<span class="calendarTimeParts ${cur.type} seq_${curIndex}">${cur.value}</span>`
+        return prev
+      }, '')
+      view.appendChild(caption)
+      let head = document.createElement('thead')
+      let weekname = document.createElement('tr')
+      let cwh = document.createElement('th')
+      cwh.classList.add('cw', 'cell')
+      cwh.innerHTML = 'CW'
+      weekname.appendChild(cwh)
+
+      let wm = new Date(im.getTime())
+      for (let i = 1; i <= 7; i++) {
+        let wn = document.createElement('th')
+        wn.innerHTML = new Intl.DateTimeFormat(this.locale, config.miniMonthWeekdayOptions).format(wm)
+        wn.classList.add(
+          'cell',
+          'weekname',
+          'weekday_' + wm.getDay()
+        )
+        wn.scope = 'col'
+        weekname.appendChild(wn)
+        wm.setDate(wm.getDate() + 1)
+      }
+      head.appendChild(weekname)
+      view.appendChild(head)
+      
+      let body = document.createElement('tbody')
+      while(im.getTime() <= ewoc.getTime()) {
+        let weekline = document.createElement('tr')
+        let cw = getWeekNo(im)
+        let cwc = document.createElement('td')
+        let thisWeek = (im.getTime() === getBeginOfWeek(new Date()).getTime() ? ['thisWeek'] : [])
+        cwc.classList.add('cw', 'cell')
+        cwc.scope = 'row'
+        cwc.innerHTML = cw
+        weekline.classList.add('weeks', 'week_' + cw, ...thisWeek)
+        weekline.appendChild(cwc)
+        let dm = new Date(im.getTime())
+        for (let i = 1; i <= 7; i++) {
+          let dc = document.createElement('td')
+          dc.classList.add(
+            'cell', 
+            'day_' + dm.getDate(),
+            'month_' + dm.getMonth() + 1,
+            'year_' + dm.getFullYear(),
+            'weekday_' + dm.getDay(),
+            (dm.getFullYear() === today.getFullYear()) ? 'thisYear' : null,
+            (dm.getMonth() === today.getMonth()) ? 'thisMonth' : null,
+            ...thisWeek,
+            (dm.getTime() === new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()) ? 'today' : null
+          )
+          let content = document.createElement('div')
+          content.classList.add('dayContent')
+
+          let date = document.createElement('div')
+          date.classList.add('date')
+          date.innerHTML = dm.getDate()
+          let evs = document.createElement('div')
+          evs.classList.add('events')
+          let edm = new Date(dm.getFullYear(), dm.getMonth(), dm.getDate(), 23, 59, 59, 999)
+          events.filter((ev) => {
+            return !(+(ev.endDate) <= dm.getTime() || +(ev.startDate) >= edm.getTime())
+          }).sort((a, b) => {
+            return ((a.endDate - a.startDate) === (b.endDate - b.startDate)) 
+              ? (a.startDate === b.startDate) ? a.endDate - b.endDate : a.startDate - b.startDate
+              : (b.endDate - b.startDate) - (a.endDate - a.startDate)
+          }).forEach((ev) => {
+            let dot = document.createElement('div')
+            dot.classList.add('eventDot')
+            dot.style.setProperty('--calendarColor', ev.color)
+            dot.innerHTML = '⬤'
+            evs.appendChild(dot)
+          })
+          content.appendChild(date)
+          content.appendChild(evs)
+          dc.appendChild(content)
+          weekline.appendChild(dc)
+          dm.setDate(dm.getDate() + 1)
+        }
+
+        body.appendChild(weekline)
+        im.setDate(im.getDate() + 7)
+      }
+      view.appendChild((body))
+      dom.appendChild(view)
+      return dom
+    }
+
+    dom = drawMiniMonth(dom, cm, events)
+
+    let agenda = document.createElement('div')
+    agenda.classList.add('agenda')
+
     for (let i = config.startDayIndex; i <= config.endDayIndex; i++) {
       
       let tm = new Date(cm.getFullYear(), cm.getMonth(), cm.getDate() + i)
@@ -491,6 +541,7 @@ Module.register('MMM-CalendarExt3Agenda', {
         target.push(ev)
         return result
       }, {fevs: [], sevs: []})
+      dayDom.dataset.eventsCounts = fevs.length + sevs.length
 
       for (const [key, value] of Object.entries({'fullday': fevs, 'single': sevs})) {
         let tDom = document.createElement('div')
@@ -501,119 +552,10 @@ Module.register('MMM-CalendarExt3Agenda', {
         }
         body.appendChild(tDom)
       }
-      dom.appendChild(dayDom)
+      agenda.appendChild(dayDom)
     }
-/*
-    do {
 
-
-
-      let wDom = document.createElement('div')
-      wDom.classList.add('week')
-      wDom.dataset.weekNo = getWeekNo(wm)
-
-      let ccDom = document.createElement('div')
-      ccDom.classList.add('cellContainer', 'weekGrid')
-
-      let ecDom = document.createElement('div')
-      ecDom.classList.add('eventContainer', 'weekGrid', 'weekGridRow')
-
-      let boundary = []
-
-      let cm = new Date(wm.valueOf())
-      for (i = 0; i < 7; i++) {
-        if (i) cm = new Date(cm.getFullYear(), cm.getMonth(), cm.getDate() + 1)
-        ccDom.appendChild(makeCellDom(cm, i))
-        boundary.push(cm.getTime())       
-      }
-      boundary.push(cm.setHours(23, 59, 59, 999))
-
-      let sw = new Date(wm.valueOf())
-      let ew = new Date(sw.getFullYear(), sw.getMonth(), sw.getDate() + 6, 23, 59, 59, 999)
-      let eventsOfWeek = events.filter((ev) => {
-        return !(ev.endDate <= sw.getTime() || ev.startDate >= ew.getTime())
-      })
-
-      for (let event of eventsOfWeek) {
-        let eDom = document.createElement('div')
-        eDom.classList.add('event')
-
-        let startLine = 0
-        if (event.startDate >= boundary.at(0)) {
-          startLine = boundary.findIndex((b, idx, bounds) => {
-            return (event.startDate >= b && event.startDate < bounds[idx + 1])
-          })
-        } else {
-          eDom.classList.add('continueFromPreviousWeek')
-        }
-
-        let endLine = boundary.length - 1
-        if (event.endDate <= boundary.at(-1) ) {
-          endLine = boundary.findIndex((b, idx, bounds) => {
-            return (event.endDate <= b && event.endDate > bounds[idx - 1])
-          })
-        } else {
-          eDom.classList.add('continueToNextWeek')
-        }
-
-        eDom.style.gridColumnStart = String(startLine + 1)
-        eDom.style.gridColumnEnd = String(endLine + 1)
-        eDom.dataset.calendarSeq = event?.calendarSeq ?? 0
-        eDom.dataset.calendarName = event.calendarName
-        eDom.dataset.color = event.color
-        eDom.dataset.description = event.description
-        eDom.dataset.title = event.title
-        eDom.dataset.fullDayEvent = event.fullDayEvent
-        eDom.dataset.geo = event.geo
-        eDom.dataset.location = event.location
-        eDom.dataset.startDate = event.startDate
-        eDom.dataset.endDate = event.endDate
-        eDom.dataset.symbol = event.symbol.join(' ')
-        eDom.dataset.today = event.today
-        eDom.classList.add('calendar_' + encodeURI(event.calendarName))
-        eDom.classList.add(event.class)
-        
-        eDom.style.setProperty('--calendarColor', event.color)
-        if (event.fullDayEvent) eDom.classList.add('fullday')
-        if (event.isPassed) eDom.classList.add('passed')
-        if (event.isCurrent) eDom.classList.add('current')
-        if (event.isFuture) eDom.classList.add('future')
-        if (event.isMultiday) eDom.classList.add('multiday')
-        if (!(event.isMultiday || event.fullDayEvent)) eDom.classList.add('singleday')
-        if (this.config.useSymbol) {
-          eDom.classList.add('useSymbol') 
-        }
-        let exDom = document.createElement('span')
-        exDom.classList.add('symbol', 'fa-solid')
-        exDom.classList.add(...event.symbol.map((s) => {return 'fa-' + s}))
-        eDom.appendChild(exDom)
-        let etDom = document.createElement('div')
-        etDom.classList.add('title')
-        etDom.innerHTML = event.title
-        let esDom = document.createElement('div')
-        esDom.classList.add('eventTime')
-        let dParts = new Intl.DateTimeFormat(this.locale, this.config.eventTimeOptions).formatToParts(new Date(event.startDate))
-        let dateHTML = dParts.reduce((prev, cur, curIndex, arr) => {
-          prev = prev + `<span class="eventTimeParts ${cur.type} seq_${curIndex}">${cur.value}</span>`
-          return prev
-        }, '')
-        esDom.innerHTML = dateHTML
-        eDom.appendChild(esDom)
-        eDom.appendChild(etDom)
-        ecDom.appendChild(eDom)
-      }
-
-      wDom.appendChild(ccDom)
-      wDom.appendChild(ecDom)
-      
-      dom.appendChild(wDom)
-      wm = new Date(wm.getFullYear(), wm.getMonth(), wm.getDate() + 7)
-    } while(wm.valueOf() <= eoc.valueOf())
-
-
-    this.viewMoment = moment
-*/
+    dom.appendChild(agenda)
     return dom
   },
-
 })
