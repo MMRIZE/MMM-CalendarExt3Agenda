@@ -2,7 +2,7 @@
 Daily agenda view module of MagicMirror
 
 ## Screenshot
-<img src="https://raw.githubusercontent.com/MMRIZE/public_ext_storage/main/MMM-CalendarExt3Agenda/preview1.png" width="800">
+<img src="https://raw.githubusercontent.com/MMRIZE/public_ext_storage/main/MMM-CalendarExt3Agenda/CX3A_110.png" width="800">
 
 
 
@@ -106,6 +106,10 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`useSymbol` | true | Whether to show font-awesome symbold instead of simple dot icon. |
 |`useWeather` | true | Whether to show forecasted weather information of default weather module. |
 |`weatherLocationName` | null | When you have multi forecasting instances of several locations, you can describe specific weather location to show. |
+|`showMiniMonthCalendar` | true | Show mini monthly calendar of this month. |
+|`miniMonthTitleOptions` | { month: 'long', year: 'numeric' } | Title of month calendar (e.g. Aug. 2022) |
+|`miniMonthWeekdayOptions` | { weekday: 'short' } | Name of weekday |
+
 ## Notification
 ### Incoming Notifications
 #### `CALENDAR_EVENTS`
@@ -212,11 +216,61 @@ This example shows how you can transform the color of events when the event titl
 - When you want to hide default `calendar` module, just remove `position` of calendar module.
 - When you want to show past events, you need to configure `calendar` module to broadcast them.
 
+### Some CSS Tips (in your `custom.css`)
+#### miniMonth Calendar Only
+```css
+.CX3A .agenda {
+  display: none;
+}
+```
+
+#### Show the days only which has event on the day.
+```css
+.CX3A .agenda .cell[data-events-counts="0"] {
+  display: none;
+}
+```
+
+#### show/hide event description or location
+```css
+.CX3A .agenda .event .description, 
+.CX3A .agenda .event .location {
+  display: none;
+} /* To All descriptions and locations */
+
+.CX3A .agenda .event.current .description {
+  display: inherit;
+} /* Show description of currently on-going event */
+
+.CX3A .agenda .event.calendar_Birthday .location {
+  display: none;
+} /* Hide location of the event in "Birthday" calendar */
+```
+
+#### Wrap multi-line event title (example for fullday event)
+```css
+.CX3A .cellBody .fullday .event .title {
+  overflow: unset;
+  white-space: unset;
+  text-overflow: unset;
+} /* You might need additional adjustment... */
+```
+
+#### Remove CW from miniMonth 
+```css
+.CX3A .miniMonth .cw {
+  display: none;
+}
+```
 
 ## Not the bug, but...
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
+
+### 1.1.0 (2022-08-17)
+- **ADDED** : miniMonth calendar
+- **FIXED** : some minor bugs fixes and code refactoring
 
 ### 1.0.0 (2022-07-12)
 - Released.

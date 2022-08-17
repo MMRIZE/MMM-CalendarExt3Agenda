@@ -1,19 +1,32 @@
-#CX3A_MAGIC {
+.CX3A_MAGIC {
   display:none;
 }
 .CX3A {
   font-size: 16px;
   min-width: 300px;
   max-width: 400px;
-  max-height: 600px;
-  overflow-y: hidden;
   text-align: left;
-  position: relative;
   color: lightgray;
-
+  --saturdayColor : slateBlue;
+  --sundayColor: crimson;
+  --todayColor: gold;
 }
 
-.CX3A::after {
+
+
+.CX3A.bodice {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.CX3A .agenda {
+  position: relative;
+  max-height: 600px;
+  overflow-y: hidden;
+}
+
+.CX3A .agenda::after {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -21,7 +34,6 @@
   width: 100%;
   content: ' ';
   background-image: linear-gradient(to bottom, transparent, black);
-
 }
 
 .CX3A .cellBody {
@@ -29,7 +41,7 @@
 }
 
 
-.CX3A .cellHeader{
+.CX3A .cellHeader {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -48,23 +60,34 @@
 
 
 .CX3A .cell.weekday_6 .cellDay {
-  color: slateblue;
+  color: var(--saturdayColor);
 }
 
 .CX3A .cell.weekday_0 .cellDay {
-  color: crimson;
+  color: var(--sundayColor);
 }
 
 .CX3A .cell.today .cellDay {
-  color: gold;
+  color: var(--todayColor);
 }
 
 .CX3A .cell.today .cellHeader {
-  color: gold;
+  color: var(--todayColor);
 }
 
 .CX3A .cellHeader .cw {
   display: none;
+  background-color: gray;
+  border-radius: 4px;
+  color: black;
+  font-size: 50%;
+  line-height: 50%;
+  padding: 4px 2px;
+  height: auto;
+}
+
+.CX3A .cellHeader .cw::before {
+  content: 'CW:'
 }
 
 .CX3A .cellBody .fullday {
@@ -135,10 +158,10 @@
   vertical-align: text-bottom;
 }
 
-.CX3A .cellBody {
-  padding-bottom: 2px;
-  border-bottom: 1px solid gray;
-  margin-bottom: 2px;
+.CX3A .agenda .cell {
+  padding-top: 2px;
+  border-top: 1px solid gray;
+  margin-top: 2px;
 }
 
 .CX3A .event .description {
@@ -197,3 +220,116 @@
   filter: saturate(2);
   font-weight: bold;
 }
+
+.CX3A .miniMonth {
+  border: none;
+  font-size: 85%;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.CX3A .miniMonth .cell {
+  max-width: calc(100% / 7);
+  min-width: calc(100% / 8);
+}
+
+.CX3A .miniMonth .cell .content {
+
+  display: flex;
+  flex-direction: column;
+}
+
+.CX3A .miniMonth .cell .date {
+  display: block;
+  text-align: center;
+}
+
+
+.CX3A .miniMonth .cell .events {
+  height: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2px;
+  text-overflow: clip;
+  max-width: 100%;
+}
+
+.CX3A .miniMonth .cell .events .eventDot {
+  height: 4px;
+  width: 4px;
+  color: var(--calendarColor);
+  font-size: 4px;
+  line-height: 100%;
+}
+
+.CX3A .miniMonth .cell.today .date {
+  color: var(--todayColor);
+  font-weight: bold;
+}
+
+.CX3A .miniMonth .cell:not(.thisMonth) .date {
+  color: gray;
+}
+
+.CX3A .miniMonth .weeks.thisWeek {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.CX3A .miniMonth .weekname {
+  text-align: center;
+}
+
+.CX3A .miniMonth .weekday_0 {
+  color: var(--sundayColor);
+}
+
+.CX3A .miniMonth .weekday_6 {
+  color: var(--saturdayColor);
+}
+
+.CX3A .miniMonth .cw {
+  border-right: 1px solid gray;
+  text-align: right;
+  padding-right: 5px;
+  font-size: 80%;
+  color: gray;
+  vertical-align: top;
+  /* display: none; */
+}
+
+.CX3A .miniMonth .weeks.thisWeek .cw {
+  color: white;
+  font-weight: bold;
+}
+
+.CX3A .miniMonth caption {
+  caption-side: top;
+  font-size: 150%;
+  text-align: right;
+  font-weight: bold;
+}
+
+/* Tip (in your custom.css) */
+
+/* 1. miniMonth Calendar Only */
+/*
+.CX3A .agenda {
+  display: none;
+}
+*/
+
+/* 2. Show the days only which has event on the day. */
+/*
+.CX3A .agenda .cell[data-events-counts="0"] {
+  display: none;
+}
+*/
+
+/* show/hide event description or location */
+/*
+.CX3A .agenda .event .description, 
+.CX3A .agenda .event .location {
+  display: none;
+}
+*/
