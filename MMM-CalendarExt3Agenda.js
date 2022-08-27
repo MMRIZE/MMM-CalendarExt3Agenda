@@ -240,16 +240,18 @@ Module.register('MMM-CalendarExt3Agenda', {
       let headline = document.createElement('div')
       headline.classList.add('headline')
 
-      let symbol = document.createElement('div')
-      symbol.classList.add('symbol')
       if (config.useSymbol && Array.isArray(event.symbol) && event.symbol.length > 0) {
-        symbol.classList.add(...(event.symbol.map((e) => { return 'fa-' + e})))
-        symbol.classList.add('fa')
+        event.symbol.forEach((symbol) => {
+          let exDom = document.createElement('span')
+          exDom.classList.add('symbol', 'fa', ...(symbol.split(' ').map((s) => {
+            return 'fa-' + (s.replace(/^fa\-/i, ''))
+          })))
+          headline.appendChild(exDom)
+        })
       } else {
-        symbol.classList.add('noSymbol')
+        exDom.classList.add('noSymbol')
+        headline.appendChild(exDom)
       }
-
-      headline.appendChild(symbol)
 
       let time = document.createElement('div')
       time.classList.add('period')
