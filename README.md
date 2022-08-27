@@ -267,6 +267,8 @@ This example shows how you can transform the color of events when the event titl
 
 ## History
 
+### 1.1.1 (2022-08-27)
+- **ADDED** : allow multi icons and FA brands icon
 ### 1.1.0 (2022-08-17)
 - **ADDED** : miniMonth calendar
 - **FIXED** : some minor bugs fixes and code refactoring
