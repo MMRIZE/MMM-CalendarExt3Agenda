@@ -394,6 +394,12 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     let events = [...(this.storedEvents ?? [])]
 
+    if (typeof config.eventTransformer === 'function') {
+      events = events.map((ev) => {
+        return config.eventTransformer(ev)
+      })
+    }
+
     events = events.filter((ev) => {
       return !(+ev.endDate <= tboc || +ev.startDate >= teoc)
     }).map((ev) => {
@@ -412,12 +418,6 @@ Module.register('MMM-CalendarExt3Agenda', {
     if (typeof config.eventFilter === 'function') {
       events = events.filter((ev) => {
         return config.eventFilter(ev)
-      })
-    }
-
-    if (typeof config.eventTransformer === 'function') {
-      events = events.map((ev) => {
-        return config.eventTransformer(ev)
       })
     }
 
