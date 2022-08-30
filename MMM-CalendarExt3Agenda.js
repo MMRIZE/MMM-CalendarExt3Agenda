@@ -243,13 +243,19 @@ Module.register('MMM-CalendarExt3Agenda', {
       if (config.useSymbol && Array.isArray(event.symbol) && event.symbol.length > 0) {
         event.symbol.forEach((symbol) => {
           let exDom = document.createElement('span')
-          exDom.classList.add('symbol', 'fa', ...(symbol.split(' ').map((s) => {
-            return 'fa-' + (s.replace(/^fa\-/i, ''))
-          })))
+          exDom.classList.add('symbol')
+          if (symbol) {
+            exDom.classList.add('fa', ...(symbol.split(' ').map((s) => {
+              return 'fa-' + (s.replace(/^fa\-/i, ''))
+            })))
+          } else {
+            exDom.classList.add('noSymbol')
+          }
           headline.appendChild(exDom)
         })
       } else {
-        exDom.classList.add('noSymbol')
+        let exDom = document.createElement('span')
+        exDom.classList.add('noSymbol', 'symbol')
         headline.appendChild(exDom)
       }
 
@@ -394,12 +400,9 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     let events = [...(this.storedEvents ?? [])]
 
-    if (typeof config.eventTransformer === 'function') {
-      events = events.map((ev) => {
-        return config.eventTransformer(ev)
-      })
-    }
-
+    
+    events = (typeof config.eventTransformer === 'function') ? events.map(config.eventTransformer) : events
+  
     events = events.filter((ev) => {
       return !(+ev.endDate <= tboc || +ev.startDate >= teoc)
     }).map((ev) => {
@@ -544,7 +547,6 @@ Module.register('MMM-CalendarExt3Agenda', {
         return result
       }, {fevs: [], sevs: []})
       dayDom.dataset.eventsCounts = fevs.length + sevs.length
-
       for (const [key, value] of Object.entries({'fullday': fevs, 'single': sevs})) {
         let tDom = document.createElement('div')
         tDom.classList.add(key)
