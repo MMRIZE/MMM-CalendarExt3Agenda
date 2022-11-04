@@ -58,6 +58,7 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     this.refreshTimer = null
     this.activeConfig = {...this.config}
+    this.eventPool = new Map()
   },
   
   notificationReceived: function(notification, payload, sender) {
@@ -70,19 +71,22 @@ Module.register('MMM-CalendarExt3Agenda', {
     }
 
     if (notification === 'CALENDAR_EVENTS') {
-      this.storedEvents = JSON.parse(JSON.stringify(payload))
+        this.eventPool.set(sender.identifier, JSON.parse(JSON.stringify(payload)))
       let calendarSet = (Array.isArray(this.config.calendarSet)) ? [...this.config.calendarSet] : []
       if (calendarSet.length > 0) {
-        this.storedEvents = this.storedEvents.filter((ev) => {
+        this.eventPool.set(sender.identifier, this.eventPool.get(sender.identifier).filter((ev) => {
           return (calendarSet.includes(ev.calendarName))
         }).map((ev) => {
           let i = calendarSet.findIndex((name) => {
             return name === ev.calendarName
           }) + 1
-          ev.calendarSeq = i 
+          ev.calendarSeq = i
           return ev
-        })
+        }))
       }
+      this.storedEvents = [...this.eventPool.values()].reduce((result, cur) => {
+        return [...result, ...cur]
+      }, [])
       if (this.fetchTimer) {
         clearTimeout(this.fetchTimer)
         this.fetchTimer = null
