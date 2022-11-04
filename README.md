@@ -278,7 +278,8 @@ eventTransformer: (e) => {
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
-
+### 1.1.4 (2022-11-04)
+- **Fixed** fix the cal event broadcasr handling (Thanks to @sdetweil)
 ### 1.1.3 (2022-08-30)
 - **Fixed** Urgent fix for `useSymbol` issue since #1.1.1
 - **Fixed** `symbol:null` issue resolved
