@@ -100,7 +100,9 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     if (notification === 'WEATHER_UPDATED') {
       if (
-        (this.config.useWeather && ((this.config.weatherLocationName && this.config.weatherLocationName === payload.locationName) || !this.config.weatherLocationName))
+        (this.config.useWeather 
+          && ((this.config.weatherLocationName && payload.locationName.includes(this.config.weatherLocationName)) 
+          || !this.config.weatherLocationName))
         && (Array.isArray(payload?.forecastArray) && payload?.forecastArray.length)
       ) {
         this.forecast = [...payload.forecastArray].map((o) => {
@@ -108,6 +110,10 @@ Module.register('MMM-CalendarExt3Agenda', {
           o.dateId = d.toLocaleDateString('en-CA')
           return o
         })
+      } else {
+        if (this.config.weatherLocationName && !payload.locationName.includes(this.config.weatherLocationName)) {
+          Log.warn(`"weatherLocationName: '${this.config.weatherLocationName}'" doesn't match with location of weather module ('${payload.locationName}')`)
+        }
       }
     }
   },

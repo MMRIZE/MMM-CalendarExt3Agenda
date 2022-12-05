@@ -115,6 +115,9 @@ All the properties are omittable, and if omitted, a default value will be applie
 #### `CALENDAR_EVENTS`
 Any module which can emit this notification could become the source of this module. Generally, the default `calendar` module would be.
 
+#### `WEATHER_UPDATED`
+Any module which can emit this notification could become the source of weather forecasting. Generally, the default `weather` module would be.
+
 ### Outgoing Notification
 Nothing yet.  (Does it need?)
 
@@ -216,6 +219,15 @@ This example shows how you can transform the color of events when the event titl
 - When you want to hide default `calendar` module, just remove `position` of calendar module.
 - When you want to show past events, you need to configure `calendar` module to broadcast them.
 
+### Weather forecast
+When you are using MM's default `weather` forecasting, weather icon will be displayed on the day cell.
+```js
+useWeather: true,
+weatherLocationName: 'New York',
+// Original weather module might have its location name with more details. (e.g. 'New York City, US'), but the partial text included would be acceptable for this attribute.
+// When the location name would not match, warning messgage will be shown on dev console. Check it.
+```
+
 ### Some CSS Tips (in your `custom.css`)
 #### miniMonth Calendar Only
 ```css
@@ -278,6 +290,10 @@ eventTransformer: (e) => {
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
+
+### 1.1.5 (2022-12-05)
+- **Added** `useWeather` option. (true/false)
+- **Added** `weatherLocationName` option (some partial text to distinguish location)
 ### 1.1.4 (2022-11-04)
 - **Fixed** fix the cal event broadcasr handling (Thanks to @sdetweil)
 ### 1.1.3 (2022-08-30)
