@@ -1,6 +1,8 @@
 # MMM-CalendarExt3Agenda
 Daily agenda view module of MagicMirror
 
+> `1.2.0` has many changes from `1.1.x` and still beta staged. If you want to use the old version, checkout `snap-1.1.5` branch
+
 ## Screenshot
 <img src="https://raw.githubusercontent.com/MMRIZE/public_ext_storage/main/MMM-CalendarExt3Agenda/CX3A_110.png" width="800">
 
@@ -31,6 +33,25 @@ This is a sibling module of `[MMM-CalendarExt3](https://github.com/MMRIZE/MMM-Ca
 ```sh
 cd ~/MagicMirror/modules
 git clone https://github.com/MMRIZE/MMM-CalendarExt3Agenda
+```
+
+## Update (to `1.2.0`)
+```sh
+cd ~/MagicMirror/modules/MMM-CalendarExt3Agenda
+git pull
+npm install
+```
+
+When some `submodule` is not updated, try this.
+```sh
+cd ~/MagicMirror/modules/MMM-CalendarExt3Agenda
+git submodule update --init --recursive
+```
+
+If you want to return to `1.1.5` version,
+```sh
+cd ~/MagicMirror/modules/MMM-CalendarExt3Agenda
+git checkout dev-1.1.5
 ```
 
 ## Config
@@ -104,11 +125,17 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`refreshInterval`| 1800000 | (ms) refresh view by force if you need it. |
 |`animationSpeed` | 1000 | (ms) Refreshing the view smoothly. |
 |`useSymbol` | true | Whether to show font-awesome symbold instead of simple dot icon. |
+|`eventNotification`| 'CALENDAR_EVENTS' | A carrier notification of event source.|
+|`eventPayload` | callback function | A converter for event payload before using it.|
 |`useWeather` | true | Whether to show forecasted weather information of default weather module. |
 |`weatherLocationName` | null | When you have multi forecasting instances of several locations, you can describe specific weather location to show. |
+|`weatherNotification`| 'WEATHER_UPDATED' | A carrier notification of weather forecasting source |
+|`weatherPayload` | callback function | A converter for weather foracasting payload before using it. |
 |`showMiniMonthCalendar` | true | Show mini monthly calendar of this month. |
 |`miniMonthTitleOptions` | { month: 'long', year: 'numeric' } | Title of month calendar (e.g. Aug. 2022) |
 |`miniMonthWeekdayOptions` | { weekday: 'short' } | Name of weekday |
+|`onlyEventDays` | 0 | `0` or `false` show empty days, `N:Integer bigger than 0` will show `N` days which have event(s) in that day.| 
+
 
 ## Notification
 ### Incoming Notifications
@@ -214,6 +241,24 @@ eventTransformer: (ev) => {
 ```
 This example shows how you can transform the color of events when the event title has specific text.
 
+
+### eventPayload / weatherPayload
+You can convert or transform the payload of incoming notification instantly before used in this module. It would be convenient when conversion or manipulating payload from uncompatible module.
+```js
+weatherPayload: (payload) => {
+  if (Array.isArray(payload?.forecastArray)) {
+    payload.forecastArray = payload.forecastArray.map((f) => {
+      f.maxTemperature = Math.round(f.maxTemperature * 9 / 5 + 32)
+      f.minTemperature = Math.round(f.minTemperature * 9 / 5 + 32)
+      return f
+    })
+  }
+  return payload
+},
+```
+This example show how to transform Celcius temperature to Fahrenheit units. (Original default weather module has a bug to deliver Fahrenheit temperature of broadcasted forecasts.)
+
+
 ## Tips
 - This module needs MM's original default module `calendar` or equivalent module which can parse and broadcast events. This module cannot handle events alone.
 - When you want to hide default `calendar` module, just remove `position` of calendar module.
@@ -290,6 +335,19 @@ eventTransformer: (e) => {
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
+
+### 1.2.0 (2023-04-25)
+- **ADDED**: `weatherNotification`, `eventNotification` - To get data from 3rd party module which is not compatible with default modules.
+- **ADDED**: `weatherPayload`, `eventPayload` - To manipulate or to convert received payload itself on time. (e.g. Convert Celcius unit to Fahrenheit unit)
+- **ADDED**: Hiding day cell which has no event : `onlyEventDays: n`
+- **CHANGED** : Display whole month events in `miniCalendar` regardless of agenda showing (despite `endDayIndex` or `onlyEventDays`) 
+- **CHANGED**: Shared library to fix many issues.
+- **CHANGED**: Timing of `eventFilter` and `eventTransformer` is delayed for better-handling event data after regularized
+- **FIXED** : Pooling events with multi-calendar modules' notification
+- **FIXED**: position issue (I hope so...)
+- **FIXED**: some typo.
+- **FIXED**: flickering for many reasons (logic error to treat notifications)
+
 
 ### 1.1.5 (2022-12-05)
 - **Added** `useWeather` option. (true/false)
