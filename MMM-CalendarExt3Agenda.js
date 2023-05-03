@@ -136,12 +136,12 @@ Module.register('MMM-CalendarExt3Agenda', {
   
   notificationReceived: function(notification, payload, sender) {
     if (notification === this.notifications.eventNotification) {
-      let conveertedPayload = this.notifications.eventPayload(payload)
+      let convertedPayload = this.notifications.eventPayload(payload)
       if (this?.storedEvents?.length == 0 && payload.length > 0) {
-        this._receiveFirstData({payload: conveertedPayload, sender})
+        this._receiveFirstData({payload: convertedPayload, sender})
       }
       if (this?.library?.loaded) {
-        this.fetch(conveertedPayload, sender)  
+        this.fetch(convertedPayload, sender)  
       } else {
         Log.warn('[CX3A] Module is not prepared yet, wait a while.')
       }
@@ -304,7 +304,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     } else {
       events = prepareEvents({
         storedEvents: this.storedEvents,
-        config: config,
+        config: options,
         range: [tboc, teoc]
       })
       for (let i = options.startDayIndex; i <= options.endDayIndex; i++) {
@@ -419,7 +419,7 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     let mEvents = prepareEvents({
       storedEvents: this.storedEvents,
-      config: config,
+      config: options,
       range: [
         new Date(moment.getFullYear(), moment.getMonth(), 1).getTime(),
         new Date(moment.getFullYear(), moment.getMonth() + 1, 0).getTime()
