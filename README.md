@@ -336,6 +336,9 @@ eventTransformer: (e) => {
 
 ## History
 
+
+### 1.2.1 (2023-05-03)
+- FIXED: Hotfix for `eventFilter` and `eventTransformer` issues.
 ### 1.2.0 (2023-04-25)
 - **ADDED**: `weatherNotification`, `eventNotification` - To get data from 3rd party module which is not compatible with default modules.
 - **ADDED**: `weatherPayload`, `eventPayload` - To manipulate or to convert received payload itself on time. (e.g. Convert Celcius unit to Fahrenheit unit)
