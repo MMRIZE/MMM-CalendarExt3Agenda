@@ -147,7 +147,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       }
     }
 
-    if (notification === 'DOM_OBJECTS_CREATED') {
+    if (notification === 'MODULE_DOM_CREATED') {
       this._domReady()
     }
 
