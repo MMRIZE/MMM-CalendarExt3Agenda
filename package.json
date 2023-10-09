@@ -1,6 +1,6 @@
 {
   "name": "mmm-calendarext3agenda",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Daily agenda view module of MagicMirror",
   "main": "MMM-CalendarExt3Agenda",
   "scripts": {

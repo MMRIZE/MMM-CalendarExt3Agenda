@@ -290,7 +290,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     if (options.onlyEventDays) {
       let ebd = eventsByDate({
         storedEvents: this.storedEvents,
-        config: config,
+        config: options,
         startTime: tboc,
         dayCounts: options.onlyEventDays
       })
@@ -316,7 +316,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     let cm = new Date(moment.getFullYear(), moment.getMonth(), moment.getDate())
 
     const drawMiniMonth = (dom, cm, events = [], options) => {
-      if (!options.showMiniMonthCalendar || !this.library.loaded) return dom
+      
 
       let bwoc = getBeginOfWeek(new Date(cm.getFullYear(), cm.getMonth(), 1), options)
       let ewoc = getBeginOfWeek(new Date(cm.getFullYear(), cm.getMonth() + 1, 0), options)
@@ -416,17 +416,17 @@ Module.register('MMM-CalendarExt3Agenda', {
       dom.appendChild(view)
       return dom
     }
-
-    let mEvents = prepareEvents({
-      storedEvents: this.storedEvents,
-      config: options,
-      range: [
-        new Date(moment.getFullYear(), moment.getMonth(), 1).getTime(),
-        new Date(moment.getFullYear(), moment.getMonth() + 1, 0).getTime()
-      ]
-    })
-
-    dom = drawMiniMonth(dom, cm, mEvents, options)
+    if (options.showMiniMonthCalendar && this.library.loaded) {
+      let mEvents = prepareEvents({
+        storedEvents: this.storedEvents,
+        config: options,
+        range: [
+          new Date(moment.getFullYear(), moment.getMonth(), 1).getTime(),
+          new Date(moment.getFullYear(), moment.getMonth() + 1, 0).getTime()
+        ]
+      })
+      dom = drawMiniMonth(dom, cm, mEvents, options)
+    }
 
     let agenda = document.createElement('div')
     agenda.classList.add('agenda')

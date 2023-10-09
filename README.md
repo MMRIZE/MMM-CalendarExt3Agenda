@@ -336,6 +336,11 @@ eventTransformer: (e) => {
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
+
+### 1.2.3 (2023-10-09)
+- **CHANGED** Making some logics efficient.
+- **FIXED** A bug on `onlyEventDays`
+
 ### 1.2.2 (2023-05-30)
 - **CHANGED** : Not too strict about other modules' DOM creation failure.
 
