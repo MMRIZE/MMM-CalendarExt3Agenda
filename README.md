@@ -33,6 +33,7 @@ This is a sibling module of `[MMM-CalendarExt3](https://github.com/MMRIZE/MMM-Ca
 ```sh
 cd ~/MagicMirror/modules
 git clone https://github.com/MMRIZE/MMM-CalendarExt3Agenda
+cd MMM-CalendarExt3Agenda
 npm install
 ```
 
