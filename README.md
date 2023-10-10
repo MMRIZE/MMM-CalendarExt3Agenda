@@ -41,7 +41,6 @@ npm install
 ```sh
 cd ~/MagicMirror/modules/MMM-CalendarExt3Agenda
 git pull
-cd MMM-CalendarExt3Agenda
 npm install
 ```
 
