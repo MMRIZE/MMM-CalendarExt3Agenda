@@ -337,6 +337,12 @@ eventTransformer: (e) => {
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
+### 1.3.0 (2023-11-18)
+- **UPDATED** CX3 1.7.0 equivalent features
+- **ADDED** Supporting Iconify
+- **ADDED** `skip` of event Object property
+- **ADDED** `skipPassedEventToday` of config
+- **ADDED** auto-detect `firstDayOfWeek` and `minimalDaysOfNewYear`
 
 ### 1.2.4 (2023-11-18)
 - **ADDED** Supporting Iconify (CX3 1.7.0 represents)
