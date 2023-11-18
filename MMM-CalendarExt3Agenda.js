@@ -48,6 +48,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     eventPayload: (payload) => { return payload },
 
     useIconify: false,
+    weekends: [],
   },
 
   defaulNotifications: {
@@ -74,13 +75,14 @@ Module.register('MMM-CalendarExt3Agenda', {
     this.forecast = []
     this.instanceId = this.config.instanceId ?? this.identifier
     this.locale = Intl.getCanonicalLocales(this.config.locale ?? config?.locale ?? config?.language)?.[ 0 ] ?? ''
-    /*
-    if (!this.config.firstDayOfWeek || !this.config.minimalDaysOfNewYear) {
-      const locale = new Intl.Locale(this.locale)
-      this.config.firstDayOfWeek = this.config.firstDayOfWeek ?? locale?.weekInfo?.firstDay ?? weekInfoFallback.firstDay
-      this.config.minimalDaysOfNewYear = this.config.minimalDaysOfNewYear ?? locale?.weekInfo?.minDays ?? weekInfoFallback.minDays
+
+    const calInfo = new Intl.Locale(this.locale)
+    if (calInfo?.weekInfo) {
+      this.config.firstDayOfWeek = (this.config.firstDayOfWeek !== null) ? this.config.firstDayOfWeek : (calInfo.weekInfo?.firstDay ?? 1)
+      this.config.minimalDaysOfNewYear = (this.config.minimalDaysOfNewYear !== null) ? this.config.minimalDaysOfNewYear : (calInfo.weekInfo?.minimalDays ?? 4)
+      this.config.weekends = ((Array.isArray(this.config.weekends) && this.config.weekends?.length) ? this.config.weekends : (calInfo.weekInfo?.weekend ?? [])).map(d => d % 7)
     }
-    */
+
     this.forecast = []
 
     this.refreshTimer = null
@@ -231,7 +233,11 @@ Module.register('MMM-CalendarExt3Agenda', {
         'seq_' + seq,
         'week_' + getWeekNo(tm, options)
       )
-      
+
+      options.weekends.forEach((w, i) => {
+        if (tm.getDay() === w) cell.classList.add('weekend', 'weekend_' + (i + 1))
+      })
+
       let h = document.createElement('div')
       h.classList.add('cellHeader')
 
@@ -323,13 +329,10 @@ Module.register('MMM-CalendarExt3Agenda', {
         dateIndex.push(getRelativeDate(moment, i).getTime())
       }
     }
-    
-    //events = (typeof options.eventTransformer === 'function') ? events.map(options.eventTransformer) : events
+
     let cm = new Date(moment.getFullYear(), moment.getMonth(), moment.getDate())
 
     const drawMiniMonth = (dom, cm, events = [], options) => {
-      
-
       let bwoc = getBeginOfWeek(new Date(cm.getFullYear(), cm.getMonth(), 1), options)
       let ewoc = getBeginOfWeek(new Date(cm.getFullYear(), cm.getMonth() + 1, 0), options)
 
@@ -348,7 +351,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       let weekname = document.createElement('tr')
       let cwh = document.createElement('th')
       cwh.classList.add('cw', 'cell')
-      cwh.innerHTML = 'CW'
+      //cwh.innerHTML = 'CW'
       weekname.appendChild(cwh)
 
       let wm = new Date(im.getTime())
@@ -363,10 +366,13 @@ Module.register('MMM-CalendarExt3Agenda', {
         wn.scope = 'col'
         weekname.appendChild(wn)
         wm.setDate(wm.getDate() + 1)
+        options.weekends.forEach((w, ix) => {
+          if (i % 7 === w % 7) wn.classList.add('weekend', 'weekend_' + (ix + 1))
+        })
       }
       head.appendChild(weekname)
       view.appendChild(head)
-      
+
       let body = document.createElement('tbody')
       while(im.getTime() <= ewoc.getTime()) {
         let weekline = document.createElement('tr')
@@ -384,7 +390,7 @@ Module.register('MMM-CalendarExt3Agenda', {
           dc.classList.add(
             'cell', 
             'day_' + dm.getDate(),
-            'month_' + dm.getMonth() + 1,
+            'month_' + (dm.getMonth() + 1),
             'year_' + dm.getFullYear(),
             'weekday_' + dm.getDay(),
             (dm.getFullYear() === today.getFullYear()) ? 'thisYear' : null,
@@ -392,6 +398,9 @@ Module.register('MMM-CalendarExt3Agenda', {
             ...thisWeek,
             (dm.getTime() === new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()) ? 'today' : null
           )
+          options.weekends.forEach((w, ix) => {
+            if (dm.getDay() % 7 === w % 7) dc.classList.add('weekend', 'weekend_' + (ix + 1))
+          })
           let content = document.createElement('div')
           content.classList.add('dayContent')
 
@@ -460,10 +469,11 @@ Module.register('MMM-CalendarExt3Agenda', {
       let eventCounts = fevs.length + sevs.length
       dayDom.dataset.eventsCounts = eventCounts
       if (eventCounts === 0) dayDom.classList.add('noEvents')
-      for (const [key, value] of Object.entries({'fullday': fevs, 'single': sevs})) {
+      for (const [ key, value ] of Object.entries({ 'fullday': fevs, 'single': sevs })) {
         let tDom = document.createElement('div')
         tDom.classList.add(key)
         for (let e of value) {
+          if (e?.skip) continue
           let ev = renderEventAgenda(e, {
             useSymbol: options.useSymbol, 
             eventTimeOptions: options.eventTimeOptions, 
@@ -474,7 +484,6 @@ Module.register('MMM-CalendarExt3Agenda', {
         }
         body.appendChild(tDom)
       }
-      //if (!options.onlyEventDays || eventCounts > 0) agenda.appendChild(dayDom)
       agenda.appendChild(dayDom)
     }
 

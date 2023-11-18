@@ -1,18 +1,20 @@
 .CX3A_MAGIC {
-  display:none;
+  display: none;
 }
+
 .CX3A {
   font-size: 16px;
   min-width: 300px;
   max-width: 400px;
   text-align: left;
   color: lightgray;
-  --saturdayColor : slateBlue;
+
+  --saturdayColor: dodgerblue;
   --sundayColor: crimson;
   --todayColor: gold;
+  --weekend_1_color: dodgerblue;
+  --weekend_2_color: crimson;
 }
-
-
 
 .CX3A.bodice {
   display: flex;
@@ -32,14 +34,13 @@
   left: 0;
   height: 20%;
   width: 100%;
-  content: ' ';
+  content: " ";
   background-image: linear-gradient(to bottom, transparent, black);
 }
 
 .CX3A .cellBody {
   line-height: 105%;
 }
-
 
 .CX3A .cellHeader {
   display: flex;
@@ -58,13 +59,22 @@
   color: white;
 }
 
-
+/*
 .CX3A .cell.weekday_6 .cellDay {
   color: var(--saturdayColor);
 }
 
 .CX3A .cell.weekday_0 .cellDay {
   color: var(--sundayColor);
+}
+*/
+
+.CX3A .cell.weekend_1 .cellDay {
+  color: dodgerblue;
+}
+
+.CX3A .cell.weekend_2 .cellDay {
+  color: crimson;
 }
 
 .CX3A .cell.today .cellDay {
@@ -87,7 +97,7 @@
 }
 
 .CX3A .cellHeader .cw::before {
-  content: 'CW:'
+  content: "CW:";
 }
 
 .CX3A .cellBody .fullday {
@@ -135,7 +145,6 @@
   display: none;
 }
 
-
 .CX3A .cellWeather {
   display: flex;
   justify-content: flex-end;
@@ -147,14 +156,14 @@
 }
 
 .CX3A .cellWeather .temperature::after {
-  content: '°'
+  content: "°";
 }
 
 .CX3A .cellWeather .maxTemp {
   font-weight: bold;
 }
 
-.CX3A .cellWeather .wi:before {
+.CX3A .cellWeather .wi::before {
   vertical-align: text-bottom;
 }
 
@@ -187,19 +196,19 @@
 .CX3A .event .time {
   font-size: 75%;
   vertical-align: text-bottom;
+  min-width: fit-content;
 }
 
 .CX3A .event .time.notInDay {
   display: none;
 }
 
-
 .CX3A .event .startTime::after {
-  content: ' -';
+  content: " -";
 }
 
 .CX3A .event .startTime.notInDay + .endTime.inDay::before {
-  content: '- ';
+  content: "- ";
 }
 
 .CX3A .event .headline .symbol {
@@ -209,7 +218,7 @@
 }
 
 .CX3A .event .headline .symbol.noSymbol::after {
-  content: '⬤';
+  content: "⬤";
 }
 
 .CX3A .event.passed {
@@ -234,7 +243,6 @@
 }
 
 .CX3A .miniMonth .cell .content {
-
   display: flex;
   flex-direction: column;
 }
@@ -243,7 +251,6 @@
   display: block;
   text-align: center;
 }
-
 
 .CX3A .miniMonth .cell .events {
   height: 5px;
@@ -273,19 +280,29 @@
 }
 
 .CX3A .miniMonth .weeks.thisWeek {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgb(255 255 255 / 20%);
 }
 
 .CX3A .miniMonth .weekname {
   text-align: center;
 }
 
+/*
 .CX3A .miniMonth .weekday_0 {
   color: var(--sundayColor);
 }
 
 .CX3A .miniMonth .weekday_6 {
   color: var(--saturdayColor);
+}
+*/
+
+.CX3A .miniMonth .weekend_1 {
+  color: dodgerblue;
+}
+
+.CX3A .miniMonth .weekend_2 {
+  color: crimson;
 }
 
 .CX3A .miniMonth .cw {
@@ -295,12 +312,17 @@
   font-size: 80%;
   color: gray;
   vertical-align: top;
+
   /* display: none; */
 }
 
 .CX3A .miniMonth .weeks.thisWeek .cw {
   color: white;
   font-weight: bold;
+}
+
+.CX3A .miniMonth thead .cw::before {
+  content: "CW";
 }
 
 .CX3A .miniMonth caption {
@@ -313,6 +335,7 @@
 /* Tip (in your custom.css) */
 
 /* 1. miniMonth Calendar Only */
+
 /*
 .CX3A .agenda {
   display: none;
@@ -320,6 +343,7 @@
 */
 
 /* 2. Show the days only which has event on the day. */
+
 /*
 .CX3A .agenda .cell[data-events-counts="0"] {
   display: none;
@@ -327,6 +351,7 @@
 */
 
 /* show/hide event description or location */
+
 /*
 .CX3A .agenda .event .description, 
 .CX3A .agenda .event .location {
