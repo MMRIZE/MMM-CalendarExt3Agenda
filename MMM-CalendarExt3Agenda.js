@@ -8,8 +8,8 @@ Module.register('MMM-CalendarExt3Agenda', {
     endDayIndex: 10,
     onlyEventDays: 0, // 0: show all days regardless of events, n: show only n days which have events.
     instanceId: null,
-    firstDayOfWeek: 1, // 0: Sunday, 1: Monday
-    minimalDaysOfNewYear: 4, // When the first week of new year starts in your country.
+    firstDayOfWeek: null, // 0: Sunday, 1: Monday
+    minimalDaysOfNewYear: null, // When the first week of new year starts in your country.
     cellDayOptions: {
       '-1': { numeric: 'auto', style: 'long' },
       '0': { numeric: 'auto', style: 'long' },
@@ -46,6 +46,8 @@ Module.register('MMM-CalendarExt3Agenda', {
     weatherPayload: (payload) => { return payload },
     eventNotification: 'CALENDAR_EVENTS',
     eventPayload: (payload) => { return payload },
+
+    useIconify: false,
   },
 
   defaulNotifications: {
@@ -63,17 +65,27 @@ Module.register('MMM-CalendarExt3Agenda', {
     return new Date()
   },
 
-  start: function() {
+  start: function () {
+    const weekInfoFallback = {
+      firstDay: 1,
+      minDays: 4
+    }
     this.storedEvents = []
     this.forecast = []
     this.instanceId = this.config.instanceId ?? this.identifier
-    this.locale = Intl.getCanonicalLocales(this.config.locale ?? config.language )?.[0] ?? ''
+    this.locale = Intl.getCanonicalLocales(this.config.locale ?? config?.locale ?? config?.language)?.[ 0 ] ?? ''
+    /*
+    if (!this.config.firstDayOfWeek || !this.config.minimalDaysOfNewYear) {
+      const locale = new Intl.Locale(this.locale)
+      this.config.firstDayOfWeek = this.config.firstDayOfWeek ?? locale?.weekInfo?.firstDay ?? weekInfoFallback.firstDay
+      this.config.minimalDaysOfNewYear = this.config.minimalDaysOfNewYear ?? locale?.weekInfo?.minDays ?? weekInfoFallback.minDays
+    }
+    */
     this.forecast = []
 
     this.refreshTimer = null
-    this.activeConfig = {...this.config}
+    this.activeConfig = {...this.config, locale: this.locale}
     this.eventPool = new Map()
-
 
     this.notifications = {
       weatherNotification: this.config.weatherNotification ?? this.defaulNotifications.weatherNotification,
@@ -88,6 +100,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       import('/' + this.file('CX3_Shared/CX3_shared.mjs')).then((m) => {
         this.library = m
         this.library.initModule(this, config.language)
+        if (this.config.useIconify) this.library.prepareIconify()
         resolve()
       }).catch((err) => {
         console.error(err)
@@ -119,7 +132,6 @@ Module.register('MMM-CalendarExt3Agenda', {
       setTimeout(() => {
         this.updateDom(this.config.animationSpeed)
       }, this.config.waitFetch)
-      
     })
   },
 
@@ -133,7 +145,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       config: this.config
     })
   },
-  
+
   notificationReceived: function(notification, payload, sender) {
     if (notification === this.notifications.eventNotification) {
       let convertedPayload = this.notifications.eventPayload(payload)
@@ -178,7 +190,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     dom.classList.add('bodice', 'CX3A_' + this.instanceId, 'CX3A')
     if (this.config.fontSize) dom.style.setProperty('--fontsize', this.config.fontSize)
     dom.style.setProperty('--eventheight', this.config.eventHeight)
-    dom = this.draw(dom, this.config)
+    dom = this.draw(dom, this.activeConfig)
     if (this.library?.loaded) {
       if (this.refreshTimer) {
         clearTimeout(this.refreshTimer)
@@ -190,7 +202,7 @@ Module.register('MMM-CalendarExt3Agenda', {
         this.updateDom(this.config.animationSpeed)
       }, this.config.refreshInterval)
     } else {
-      Log.warn('[CX3] Module is not prepared yet, wait a while.')
+      Log.warn('[CX3A] Module is not prepared yet, wait a while.')
     }
     return dom
   },
@@ -455,7 +467,8 @@ Module.register('MMM-CalendarExt3Agenda', {
           let ev = renderEventAgenda(e, {
             useSymbol: options.useSymbol, 
             eventTimeOptions: options.eventTimeOptions, 
-            locale:this.locale
+            locale: this.locale,
+            useIconify: options.useIconify,
           }, tm)
           tDom.appendChild(ev)
         }
