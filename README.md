@@ -338,6 +338,9 @@ eventTransformer: (e) => {
 
 ## History
 
+### 1.2.4 (2023-11-18)
+- **ADDED** Supporting Iconify (CX3 1.7.0 represents)
+
 ### 1.2.3 (2023-10-09)
 - **CHANGED** Making some logics efficient.
 - **FIXED** A bug on `onlyEventDays`
