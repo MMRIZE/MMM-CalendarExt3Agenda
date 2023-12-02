@@ -253,8 +253,8 @@ Module.register('MMM-CalendarExt3Agenda', {
       let dayDom = document.createElement('div')
       dayDom.classList.add('cellDay')
       let gap = gapFromToday(tm, options)
-      let rParts = (Object.keys(options.cellDayOptions).includes(cellDateOptionKeys[String(gap)])) 
-        ? (new Intl.RelativeTimeFormat(this.locale, options.cellDayOptions[cellDateOptionKeys[String(gap)]])).formatToParts(gap, 'day') 
+      let rParts = (Object.keys(options.cellDayOptions).includes(this.cellDateOptionKeys[String(gap)]))
+        ? (new Intl.RelativeTimeFormat(this.locale, options.cellDayOptions[this.cellDateOptionKeys[String(gap)]])).formatToParts(gap, 'day')
         : (new Intl.DateTimeFormat(this.locale, options.cellDayOptions?.['rest'] ?? {weekday: 'long'})).formatToParts(tm)
       dayDom.innerHTML = rParts.reduce((prev, cur, curIndex) => {
         prev = prev + `<span class="dateParts ${cur.type} seq_${curIndex}">${cur.value}</span>`
@@ -264,7 +264,7 @@ Module.register('MMM-CalendarExt3Agenda', {
 
       let dateDom = document.createElement('div')
       dateDom.classList.add('cellDate')
-      let dParts = new Intl.DateTimeFormat(this.locale, options.`cellDateOptions).formatToParts(tm)
+      let dParts = new Intl.DateTimeFormat(this.locale, options.cellDateOptions).formatToParts(tm)
       dateDom.innerHTML = dParts.reduce((prev, cur, curIndex) => {
         prev = prev + `<span class="dateParts ${cur.type} seq_${curIndex}">${cur.value}</span>`
         return prev
