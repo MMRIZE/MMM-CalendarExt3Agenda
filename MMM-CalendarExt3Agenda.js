@@ -10,15 +10,10 @@ Module.register('MMM-CalendarExt3Agenda', {
     instanceId: null,
     firstDayOfWeek: null, // 0: Sunday, 1: Monday
     minimalDaysOfNewYear: null, // When the first week of new year starts in your country.
-    cellDayOptions: {
-      '-1': { numeric: 'auto', style: 'long' },
-      '0': { numeric: 'auto', style: 'long' },
-      '1': { numeric: 'auto', style: 'long' },
-      'others': { weekday: 'long' }
-    },
     cellDateOptions: {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      weekday: 'short'
     },
     eventTimeOptions: {
       timeStyle: 'short'
@@ -155,7 +150,7 @@ Module.register('MMM-CalendarExt3Agenda', {
         this._receiveFirstData({payload: convertedPayload, sender})
       }
       if (this?.library?.loaded) {
-        this.fetch(convertedPayload, sender)  
+        this.fetch(convertedPayload, sender)
       } else {
         Log.warn('[CX3A] Module is not prepared yet, wait a while.')
       }
@@ -169,7 +164,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       let convertedPayload = this.notifications.weatherPayload(payload)
       if (
         (this.config.useWeather 
-          && ((this.config.weatherLocationName && convertedPayload.locationName.includes(this.config.weatherLocationName)) 
+          && ((this.config.weatherLocationName && convertedPayload.locationName.includes(this.config.weatherLocationName))
           || !this.config.weatherLocationName))
         && (Array.isArray(convertedPayload?.forecastArray) && convertedPayload?.forecastArray.length)
       ) {
@@ -191,7 +186,6 @@ Module.register('MMM-CalendarExt3Agenda', {
     dom.innerHTML = ""
     dom.classList.add('bodice', 'CX3A_' + this.instanceId, 'CX3A')
     if (this.config.fontSize) dom.style.setProperty('--fontsize', this.config.fontSize)
-    dom.style.setProperty('--eventheight', this.config.eventHeight)
     dom = this.draw(dom, this.activeConfig)
     if (this.library?.loaded) {
       if (this.refreshTimer) {
@@ -235,7 +229,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       )
 
       options.weekends.forEach((w, i) => {
-        if (tm.getDay() === w) cell.classList.add('weekend', 'weekend_' + (i + 1))
+        if (tm.getDay() % 7 === w % 7) cell.classList.add('weekend', 'weekend_' + (i + 1))
       })
 
       let h = document.createElement('div')
@@ -247,11 +241,19 @@ Module.register('MMM-CalendarExt3Agenda', {
       let dayDom = document.createElement('div')
       dayDom.classList.add('cellDay')
       let gap = gapFromToday(tm, options)
-      let rParts = (Object.keys(options.cellDayOptions).includes(String(gap))) 
-        ? (new Intl.RelativeTimeFormat(this.locale, options.cellDayOptions[String(gap)])).formatToParts(gap, 'day') 
-        : (new Intl.DateTimeFormat(this.locale, options.cellDayOptions?.['rest'] ?? {weekday: 'long'})).formatToParts(tm)
-      dayDom.innerHTML = rParts.reduce((prev, cur, curIndex) => {
-        prev = prev + `<span class="dateParts ${cur.type} seq_${curIndex}">${cur.value}</span>`
+
+      let p = new Intl.RelativeTimeFormat(this.locale, { numeric: "auto", style: "long" })
+      let pv = new Intl.RelativeTimeFormat(this.locale, { numeric: "always", style: "long" })
+
+      if (p.format(gap, "day") !== pv.format(gap, "day")) {
+        dayDom.classList.add('relativeDays', 'relativeNamedDays')
+      } else {
+        dayDom.classList.add('relativeDays')
+      }
+      dayDom.classList.add('relativeDayGap_' + gap)
+
+      dayDom.innerHTML = p.formatToParts(gap, "day").reduce((prev, cur, curIndex) => {
+        prev = prev + `<span class="dateParts ${cur.type} seq_${curIndex} unit_${cur?.unit ?? 'none'}">${cur.value}</span>`
         return prev
       }, '')
       m.appendChild(dayDom)
@@ -355,7 +357,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       weekname.appendChild(cwh)
 
       let wm = new Date(im.getTime())
-      for (let i = 1; i <= 7; i++) {
+      for (let i = 0; i < 7; i++) {
         let wn = document.createElement('th')
         wn.innerHTML = new Intl.DateTimeFormat(this.locale, options.miniMonthWeekdayOptions).format(wm)
         wn.classList.add(
@@ -365,10 +367,10 @@ Module.register('MMM-CalendarExt3Agenda', {
         )
         wn.scope = 'col'
         weekname.appendChild(wn)
-        wm.setDate(wm.getDate() + 1)
         options.weekends.forEach((w, ix) => {
-          if (i % 7 === w % 7) wn.classList.add('weekend', 'weekend_' + (ix + 1))
+          if (wm.getDay() % 7 === w % 7) wn.classList.add('weekend', 'weekend_' + (ix + 1))
         })
+        wm.setDate(wm.getDate() + 1)
       }
       head.appendChild(weekname)
       view.appendChild(head)

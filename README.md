@@ -341,7 +341,6 @@ eventTransformer: (e) => {
 - **UPDATED** CX3 1.7.0 equivalent features
 - **ADDED** Supporting Iconify
 - **ADDED** `skip` of event Object property
-- **ADDED** `skipPassedEventToday` of config
 - **ADDED** auto-detect `firstDayOfWeek` and `minimalDaysOfNewYear`
 
 ### 1.2.4 (2023-11-18)

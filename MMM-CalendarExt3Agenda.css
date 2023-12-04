@@ -1,3 +1,5 @@
+/* stylelint-disable value-no-vendor-prefix, property-no-vendor-prefix, custom-property-pattern, selector-class-pattern, */
+
 .CX3A_MAGIC {
   display: none;
 }
@@ -26,8 +28,11 @@
   position: relative;
   max-height: 600px;
   overflow-y: hidden;
+  mask-image: linear-gradient(to bottom, transparent, black 10%);
+  -webkit-mask-image: -webkit-linear-gradient(90deg, transparent, black 10%);
 }
 
+/*
 .CX3A .agenda::after {
   position: absolute;
   bottom: 0;
@@ -37,6 +42,7 @@
   content: " ";
   background-image: linear-gradient(to bottom, transparent, black);
 }
+*/
 
 .CX3A .cellBody {
   line-height: 105%;
@@ -69,19 +75,15 @@
 }
 */
 
-.CX3A .cell.weekend_1 .cellDay {
+.CX3A .cell.weekend_1 .cellHeaderMain * {
   color: dodgerblue;
 }
 
-.CX3A .cell.weekend_2 .cellDay {
+.CX3A .cell.weekend_2 .cellHeaderMain * {
   color: crimson;
 }
 
-.CX3A .cell.today .cellDay {
-  color: var(--todayColor);
-}
-
-.CX3A .cell.today .cellHeader {
+.CX3A .cell.today .cellHeaderMain * {
   color: var(--todayColor);
 }
 
