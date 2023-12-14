@@ -37,7 +37,7 @@ cd MMM-CalendarExt3Agenda
 npm install
 ```
 
-## Update (to `1.2.0`)
+## Update
 ```sh
 cd ~/MagicMirror/modules/MMM-CalendarExt3Agenda
 git pull
@@ -118,9 +118,8 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`instanceId` | (auto-generated) | When you want more than 1 instance of this module, each instance would need this value to distinguish each other. If you don't assign this property, the `identifier` of the module instance will be assigned automatically but not recommended to use it. (Hard to guess the auto-assigned value.)|
 |`firstDayOfWeek`| 1 | Monday is the first day of the week according to the international standard ISO 8601, but in the US, Canada, Japan and some cultures, it's counted as the second day of the week. If you want to start the week from Monday, set this property to `1`. If you want Sunday, set `0`. <br> Sunday:0, Monday:1, Tuesday:2, ..., Saturday:6 <br> **This option is only for using `calendarweek (CW)` showing. That is hidden by default, so you can ignore this.**|
 |`minimalDaysOfNewYear` | 4 | ISO 8601 also says **each week's year is the Gregorian year in which the Thursday falls**. The first week of the year, hence, always contains 4 January. However, the US (Yes, it is.) system differs from standards. In the US, **containing 1 January** defines the first week. In that case, set this value to `1`. And under some other culture, you might need to modify this.  <br> **This option is only for using `calendarweek (CW)` showing. That is hidden by default, so you can ignore this.**|
-|`cellDateOptions` | {month: 'short', <br>day: 'numeric'} | The format of day cell date. It varies by the `locale` and this option. <br>`locale:'en-US'`, the default displaying will be `Jun 1`. <br> See [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters) | 
-|`eventTimeOptions` | {timeStyle: 'short'} | The format of event time. It varies by the `locale` and this option. <br> `locale:'en-US'`, the default displaying will be `3:45 pm`.<br> See [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters) | 
-|`cellDayOptions`|{ <br>'-1': { numeric: 'auto', style: 'long' }, <br>'0': { numeric: 'auto', style: 'long' }, <br>'1': { numeric: 'auto', style: 'long' }, <br>'others': { weekday: 'long' } <br>}| The format of cell title. ... Just leave it. |
+|`cellDateOptions` | {month: 'short', <br>day: 'numeric'} | The format of day cell date. It varies by the `locale` and this option. <br>`locale:'en-US'`, the default displaying will be `Jun 1`. <br> See [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters) |
+|`eventTimeOptions` | {timeStyle: 'short'} | The format of event time. It varies by the `locale` and this option. <br> `locale:'en-US'`, the default displaying will be `3:45 pm`.<br> See [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters) |
 |`eventFilter`| callback function | See the `Filtering` part.|
 |`eventTransformer`| callback function | See the `Transforming` part.|
 |`waitFetch`| 5000 | (ms) waiting the fetching of last calendar to prevent flickering view by too frequent fetching. |
@@ -136,7 +135,7 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`showMiniMonthCalendar` | true | Show mini monthly calendar of this month. |
 |`miniMonthTitleOptions` | { month: 'long', year: 'numeric' } | Title of month calendar (e.g. Aug. 2022) |
 |`miniMonthWeekdayOptions` | { weekday: 'short' } | Name of weekday |
-|`onlyEventDays` | 0 | `0` or `false` show empty days, `N:Integer bigger than 0` will show `N` days which have event(s) in that day.| 
+|`onlyEventDays` | 0 | `0` or `false` show empty days, `N:Integer bigger than 0` will show `N` days which have event(s) in that day.|
 
 
 ## Notification
@@ -146,6 +145,37 @@ Any module which can emit this notification could become the source of this modu
 
 #### `WEATHER_UPDATED`
 Any module which can emit this notification could become the source of weather forecasting. Generally, the default `weather` module would be.
+
+#### `CX3A_GET_CONFIG` payload: { callback }
+You can get config information of current view. The result will be obtained by the `callback` function.
+```js
+this.sendNotification('CX3A_GET_CONFIG', {
+  callback: (result) => {
+    console.log(result.locale)
+  }
+})
+```
+
+#### `CX3A_SET_CONFIG` payload: { ...configObj, callback }
+You can override or set new config by this notification.
+
+#### `CX3A_RESET` payload: { callback }
+You can restore the original config.
+
+The next example shows a glance of the next week's schedule by notification chain.
+```js
+this.sendNotification('CX3A_GET_CONFIG', {
+  callback: (current) => {
+    this.sendNotification('CX3A_SET_CONFIG', {
+      startDayIndex: current.startDayIndex + 7,
+      endDayIndex: current.endDayIndex + 7,
+    })
+    setTimeout(() => {
+      this.sendNotification('CX3A_RESET')
+    }, 60_000)
+  }
+})
+```
 
 ### Outgoing Notification
 Nothing yet.  (Does it need?)
@@ -178,7 +208,7 @@ You can handle almost all of the visual things with CSS. See the `MMM-CalendarEx
 
 - `.event` : Every event has this selector. Each event could have these class name together by its condition.
   - `.calendar_{calendarName}`, `{class}` : Orginal `calendar`
-  - `.passed`, `.future`, `.current`, 
+  - `.passed`, `.future`, `.current`,
   - `.multiday`, `.singleday`, `.fullday`
 
 And `event` also has `dataSet` (`data-*`) as its attributes. (e.g. data-title="...", data-start-date="...") You can use these attributes also.
@@ -282,8 +312,18 @@ weatherLocationName: 'New York',
   display: none;
 }
 ```
+#### Remove all relative day title except `TODAY`
+```css
+.CX3A .relativeDay {
+  display:none;
+}
 
-#### Show the days only which has event on the day.
+.CX3A .relativeDay.relativeDay_0 {
+  display: inline-block;
+}
+```
+
+#### Show the days only which has events on the day.
 ```css
 .CX3A .agenda .cell[data-events-counts="0"] {
   display: none;
@@ -292,7 +332,7 @@ weatherLocationName: 'New York',
 
 #### show/hide event description or location
 ```css
-.CX3A .agenda .event .description, 
+.CX3A .agenda .event .description,
 .CX3A .agenda .event .location {
   display: none;
 } /* To All descriptions and locations */
@@ -315,7 +355,7 @@ weatherLocationName: 'New York',
 } /* You might need additional adjustment... */
 ```
 
-#### Remove CW from miniMonth 
+#### Remove CW from miniMonth
 ```css
 .CX3A .miniMonth .cw {
   display: none;
@@ -337,11 +377,14 @@ eventTransformer: (e) => {
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
+### 1.4.0 (2023-12-14)
+- **FIXED** wrong present of minimonth
+- **REMOVED** Config value `cellDayOptions` and className `cellDay` is deprecated. The relative day name would be controlled by classname `relativeDay`, `relativeNamedDay`, `relativeDay_N`...
+- **
 ### 1.3.0 (2023-11-18)
 - **UPDATED** CX3 1.7.0 equivalent features
 - **ADDED** Supporting Iconify
 - **ADDED** `skip` of event Object property
-- **ADDED** `skipPassedEventToday` of config
 - **ADDED** auto-detect `firstDayOfWeek` and `minimalDaysOfNewYear`
 
 ### 1.2.4 (2023-11-18)
@@ -360,7 +403,7 @@ eventTransformer: (e) => {
 - **ADDED**: `weatherNotification`, `eventNotification` - To get data from 3rd party module which is not compatible with default modules.
 - **ADDED**: `weatherPayload`, `eventPayload` - To manipulate or to convert received payload itself on time. (e.g. Convert Celcius unit to Fahrenheit unit)
 - **ADDED**: Hiding day cell which has no event : `onlyEventDays: n`
-- **CHANGED** : Display whole month events in `miniCalendar` regardless of agenda showing (despite `endDayIndex` or `onlyEventDays`) 
+- **CHANGED** : Display whole month events in `miniCalendar` regardless of agenda showing (despite `endDayIndex` or `onlyEventDays`)
 - **CHANGED**: Shared library to fix many issues.
 - **CHANGED**: Timing of `eventFilter` and `eventTransformer` is delayed for better-handling event data after regularized
 - **FIXED** : Pooling events with multi-calendar modules' notification
