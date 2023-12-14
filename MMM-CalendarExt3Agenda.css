@@ -60,9 +60,10 @@
   text-transform: uppercase;
 }
 
-.CX3A .cellDay {
+.CX3A .relativeDay {
   font-weight: bold;
   color: white;
+  margin-right: 5px;
 }
 
 /*
@@ -151,10 +152,7 @@
   display: flex;
   justify-content: flex-end;
   align-self: center;
-}
-
-.CX3A .cellWeather .temperature {
-  margin-right: 5px;
+  gap: 5px;
 }
 
 .CX3A .cellWeather .temperature::after {
@@ -262,6 +260,7 @@
   gap: 2px;
   text-overflow: clip;
   max-width: 100%;
+  overflow: hidden;
 }
 
 .CX3A .miniMonth .cell .events .eventDot {
@@ -336,7 +335,7 @@
 
 /* Tip (in your custom.css) */
 
-/* 1. miniMonth Calendar Only */
+/* miniMonth Calendar Only */
 
 /*
 .CX3A .agenda {
@@ -344,18 +343,10 @@
 }
 */
 
-/* 2. Show the days only which has event on the day. */
-
-/*
-.CX3A .agenda .cell[data-events-counts="0"] {
-  display: none;
-}
-*/
-
 /* show/hide event description or location */
 
 /*
-.CX3A .agenda .event .description, 
+.CX3A .agenda .event .description,
 .CX3A .agenda .event .location {
   display: none;
 }
