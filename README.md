@@ -30,6 +30,7 @@ This is a sibling module of `[MMM-CalendarExt3](https://github.com/MMRIZE/MMM-Ca
 
 
 ## Install
+> Since ver 1.4.0, this module requires >MM.2.23 Or Chromium >110 or equivalent browser.
 ```sh
 cd ~/MagicMirror/modules
 git clone https://github.com/MMRIZE/MMM-CalendarExt3Agenda
@@ -41,7 +42,7 @@ npm install
 ```sh
 cd ~/MagicMirror/modules/MMM-CalendarExt3Agenda
 git pull
-npm install
+npm update
 ```
 
 When some `submodule` is not updated, try this.
@@ -136,7 +137,7 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`miniMonthTitleOptions` | { month: 'long', year: 'numeric' } | Title of month calendar (e.g. Aug. 2022) |
 |`miniMonthWeekdayOptions` | { weekday: 'short' } | Name of weekday |
 |`onlyEventDays` | 0 | `0` or `false` show empty days, `N:Integer bigger than 0` will show `N` days which have event(s) in that day.|
-
+|`skipDuplicated` | true | On `true`, duplicated events(same title, same start/end) from any calendars will be skipped except one. |
 
 ## Notification
 ### Incoming Notifications
@@ -377,9 +378,14 @@ eventTransformer: (e) => {
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
+### 1.4.1 (2023-12-26)
+- **CHANGED** Over MM 2.23 is needed. (> Chromium 110)
+- **FIXED** Some minor issues for `instanceId` on the notifications.
+- **ADDED** `skipDuplicated` to skip duplicated events. (Same title and same start/end time)
+
 ### 1.4.0 (2023-12-14)
-- **FIXED** wrong present of minimonth
-- **REMOVED** Config value `cellDayOptions` and className `cellDay` is deprecated. The relative day name would be controlled by classname `relativeDay`, `relativeNamedDay`, `relativeDay_N`...
+- **FIXED** wrong present of the minimonth
+- **REMOVED** Config value `cellDayOptions` and className `cellDay` are deprecated. The relative day name would be controlled by classname `relativeDay`, `relativeNamedDay`, `relativeDay_N`...
 - **
 ### 1.3.0 (2023-11-18)
 - **UPDATED** CX3 1.7.0 equivalent features
