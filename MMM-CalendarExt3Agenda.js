@@ -34,16 +34,15 @@ Module.register('MMM-CalendarExt3Agenda', {
     miniMonthWeekdayOptions: {
       weekday: 'short'
     },
-
     //notification: 'CALENDAR_EVENTS',
-
     weatherNotification: 'WEATHER_UPDATED',
     weatherPayload: (payload) => { return payload },
     eventNotification: 'CALENDAR_EVENTS',
     eventPayload: (payload) => { return payload },
-
     useIconify: false,
     weekends: [],
+
+    skipDuplicated: true,
   },
 
   defaulNotifications: {
@@ -157,6 +156,8 @@ Module.register('MMM-CalendarExt3Agenda', {
         payload.callback(this.activeConfig)
       }
     }
+
+    if (payload?.instanceId && payload?.instanceId !== this.activeConfig?.instanceId) return
 
     if (notification === 'CX3A_GET_CONFIG') {
       replyCurrentConfig(payload)
