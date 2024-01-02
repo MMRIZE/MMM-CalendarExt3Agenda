@@ -214,7 +214,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     const prepare = (targetEvents) => {
       let events = []
       let boc = getRelativeDate(moment, options.startDayIndex).valueOf()
-      let eoc = getRelativeDate(moment, options.endDayIndex).valueOf()
+      let eoc = getRelativeDate(moment, options.endDayIndex + 1).valueOf()
       let dateIndex = []
       if (options.onlyEventDays) {
         let ebd = eventsByDate({
