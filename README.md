@@ -1,7 +1,6 @@
 # MMM-CalendarExt3Agenda
 Daily agenda view module of MagicMirror
 
-> `1.2.0` has many changes from `1.1.x` and still beta staged. If you want to use the old version, checkout `snap-1.1.5` branch
 
 ## Screenshot
 <img src="https://raw.githubusercontent.com/MMRIZE/public_ext_storage/main/MMM-CalendarExt3Agenda/CX3A_110.png" width="800">
@@ -135,9 +134,10 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`weatherPayload` | callback function | A converter for weather foracasting payload before using it. |
 |`showMiniMonthCalendar` | true | Show mini monthly calendar of this month. |
 |`miniMonthTitleOptions` | { month: 'long', year: 'numeric' } | Title of month calendar (e.g. Aug. 2022) |
-|`miniMonthWeekdayOptions` | { weekday: 'short' } | Name of weekday |
+|`miniMonthWeekdayOptions` | { weekday: 'short' } | A name of weekday of month calendar (e.g. Mon) |
 |`onlyEventDays` | 0 | `0` or `false` show empty days, `N:Integer bigger than 0` will show `N` days which have event(s) in that day.|
 |`skipDuplicated` | true | On `true`, duplicated events(same title, same start/end) from any calendars will be skipped except one. |
+|`relativeNamedDayOptions`| { style: 'long' } | A name of the relative name (e.g. "Today" or "In 2 days" |
 
 ## Notification
 ### Incoming Notifications
@@ -347,7 +347,7 @@ weatherLocationName: 'New York',
 } /* Hide location of the event in "Birthday" calendar */
 ```
 
-#### Wrap multi-line event title (example for fullday event)
+#### Wrap multi-line event title (example for the fullday event)
 ```css
 .CX3A .cellBody .fullday .event .title {
   overflow: unset;
@@ -356,7 +356,7 @@ weatherLocationName: 'New York',
 } /* You might need additional adjustment... */
 ```
 
-#### Remove CW from miniMonth
+#### Remove CW from the miniMonth
 ```css
 .CX3A .miniMonth .cw {
   display: none;
@@ -378,6 +378,9 @@ eventTransformer: (e) => {
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
+### 1.4.2 (2024-01-08)
+- **ADDED** `relativeNamedDayOptions` to modify style of the name of the relative named days. (e.g. **Today** or **In 2 days**)
+
 ### 1.4.1 (2023-12-26)
 - **CHANGED** Over MM 2.23 is needed. (> Chromium 110)
 - **FIXED** Some minor issues for `instanceId` on the notifications.
@@ -439,5 +442,15 @@ eventTransformer: (e) => {
 
 ## Author
 - Seongnoh Yi (eouia0819@gmail.com)
+
+## More Info.
+- Discussion board: https://github.com/MMRIZE/MMM-CalendarExt3Agenda/discussions
+- Bug Report: https://github.com/MMRIZE/MMM-CalendarExt3Agenda/issues
+
+## Siblings
+- [MMM-CalendarExt3](https://github.com/MMRIZE/MMM-CalendarExt3)
+- [MMM-CalendarExt3Agenda](https://github.com/MMRIZE/MMM-CalendarExt3Agenda)
+- [MMM-CalendarExt3Timeline](https://github.com/MMRIZE/MMM-CalendarExt3Timeline)
+- [MMM-CalendarExt3Journal](https://github.com/MMRIZE/MMM-CalendarExt3Journal)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y56IFLK)
