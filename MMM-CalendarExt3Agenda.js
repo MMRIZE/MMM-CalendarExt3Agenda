@@ -32,7 +32,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       year: 'numeric'
     },
     miniMonthWeekdayOptions: {
-      weekday: 'short'
+      weekday: 'long'
     },
     //notification: 'CALENDAR_EVENTS',
     weatherNotification: 'WEATHER_UPDATED',
@@ -43,6 +43,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     weekends: [],
 
     skipDuplicated: true,
+    relativeNamedDayStyle: "narrow", // "narrow" or "short" or "long"
   },
 
   defaulNotifications: {
@@ -268,8 +269,8 @@ Module.register('MMM-CalendarExt3Agenda', {
       let dayDom = document.createElement('div')
       dayDom.classList.add('cellDay')
       let gap = gapFromToday(tm, options)
-      let p = new Intl.RelativeTimeFormat(options.locale, { numeric: "auto", style: "long" })
-      let pv = new Intl.RelativeTimeFormat(options.locale, { numeric: "always", style: "long" })
+      let p = new Intl.RelativeTimeFormat(options.locale, { ...options.relativeNamedDayOptions, numeric: "auto" })
+      let pv = new Intl.RelativeTimeFormat(options.locale, { ...options.relativeNamedDayStyle, numeric: "always"})
       if (p.format(gap, "day") !== pv.format(gap, "day")) {
         dayDom.classList.add('relativeDay', 'relativeNamedDay')
       } else {
