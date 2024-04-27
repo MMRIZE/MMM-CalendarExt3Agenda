@@ -32,7 +32,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       year: 'numeric'
     },
     miniMonthWeekdayOptions: {
-      weekday: 'long'
+      weekday: 'short'
     },
     //notification: 'CALENDAR_EVENTS',
     weatherNotification: 'WEATHER_UPDATED',
