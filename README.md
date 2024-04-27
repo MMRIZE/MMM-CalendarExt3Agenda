@@ -378,6 +378,11 @@ eventTransformer: (e) => {
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
+### 1.4.3 (2024-04-28)
+- **FIXED** : MM's repeated singleday timezone issue
+- **CHANGED** : Default length of weekday name in minimonthcalendar
+- **UPDATED** : more stable CX3_Shared structure
+
 ### 1.4.2 (2024-01-08)
 - **ADDED** `relativeNamedDayOptions` to modify style of the name of the relative named days. (e.g. **Today** or **In 2 days**)
 
