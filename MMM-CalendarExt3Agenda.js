@@ -212,7 +212,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     } = this.library
     dom.innerHTML = ''
 
-    const prepare = (targetEvents) => {
+    const prepareAgenda = (targetEvents) => {
       let events = []
       let boc = getRelativeDate(moment, options.startDayIndex).valueOf()
       let eoc = getRelativeDate(moment, options.endDayIndex + 1).valueOf()
@@ -232,10 +232,8 @@ Module.register('MMM-CalendarExt3Agenda', {
           return reduced
         }, new Set())]
       } else {
-        events = prepareEvents({
-          targetEvents,
-          config: options,
-          range: [boc, eoc]
+        events = targetEvents.filter((ev) => {
+          return !(ev.endDate <= boc || ev.startDate >= eoc)
         })
         for (let i = options.startDayIndex; i <= options.endDayIndex; i++) {
           dateIndex.push(getRelativeDate(moment, i).getTime())
@@ -352,17 +350,9 @@ Module.register('MMM-CalendarExt3Agenda', {
       return dom
     }
 
-    const drawMiniMonth = (targetEvents) => {
+    const drawMiniMonth = (events) => {
       if (!options.showMiniMonthCalendar) return dom
       const cm = new Date(moment.getFullYear(), moment.getMonth(), moment.getDate() + options.startDayIndex)
-      let events = prepareEvents({
-        targetEvents: targetEvents,
-        config: options,
-        range: [
-          new Date(cm.getFullYear(), cm.getMonth(), 1).getTime(),
-          new Date(cm.getFullYear(), cm.getMonth() + 1, 0).getTime()
-        ]
-      })
       let bwoc = getBeginOfWeek(new Date(cm.getFullYear(), cm.getMonth(), 1), options)
       let ewoc = getBeginOfWeek(new Date(cm.getFullYear(), cm.getMonth() + 1, 0), options)
       let im = new Date(bwoc.getTime())
@@ -462,12 +452,21 @@ Module.register('MMM-CalendarExt3Agenda', {
       return dom
     }
 
-    const targetEvents = regularizeEvents({
-      eventPool: this.eventPool,
+
+    const cm = new Date(moment.getFullYear(), moment.getMonth(), moment.getDate() + options.startDayIndex)
+    const targetEvents = prepareEvents({
+      targetEvents: regularizeEvents({
+        eventPool: this.eventPool,
+        config: options,
+      }),
       config: options,
+      range: [
+        new Date(cm.getFullYear(), cm.getMonth(), 1).getTime(),
+        new Date(cm.getFullYear(), cm.getMonth() + 1, 0).getTime()
+      ]
     })
-    dom = drawMiniMonth(targetEvents)
-    dom = drawAgenda(prepare(targetEvents))
+    dom = drawMiniMonth([...targetEvents])
+    dom = drawAgenda(prepareAgenda([...targetEvents]))
     return dom
   },
 })
