@@ -207,20 +207,45 @@ Module.register('MMM-CalendarExt3Agenda', {
     const moment = new Date(t.getFullYear(), t.getMonth(), t.getDate())
     const {
       isToday, isThisMonth, isThisYear, getWeekNo, makeWeatherDOM,
-      getRelativeDate, prepareEvents, getBeginOfWeek, eventsByDate,
+      getRelativeDate, prepareEvents, getBeginOfWeek,
       gapFromToday, renderEventAgenda, regularizeEvents
     } = this.library
     dom.innerHTML = ''
 
     const prepareAgenda = (targetEvents) => {
+      const eventsByDate = ({ events, startTime, dayCounts }) => {
+        let ebd = events.reduce((days, ev) => {
+          let st = new Date(+ev.startDate)
+          let et = new Date(+ev.endDate)
+          if (et.getTime() <= startTime) return days
+
+          while(st.getTime() < et.getTime()) {
+            let day = new Date(st.getFullYear(), st.getMonth(), st.getDate(), 0, 0, 0, 0).getTime()
+            if (!days.has(day)) days.set(day, [])
+            days.get(day).push(ev)
+            st.setDate(st.getDate() + 1)
+          }
+          return days
+        }, new Map())
+
+        let startDay = new Date(+startTime).setHours(0, 0, 0, 0)
+        let days = Array.from(ebd.keys()).sort()
+        let position = days.findIndex((d) => d >= startDay)
+
+        return days.slice(position, position + dayCounts).map((d) => {
+          return {
+            date: d,
+            events: ebd.get(d)
+          }
+        })
+      }
       let events = []
       let boc = getRelativeDate(moment, options.startDayIndex).valueOf()
       let eoc = getRelativeDate(moment, options.endDayIndex + 1).valueOf()
       let dateIndex = []
-      if (options.onlyEventDays) {
+      if (options.onlyEventDays >= 1) {
         let ebd = eventsByDate({
-          targetEvents,
-          config: options,
+          events: targetEvents,
           startTime: boc,
           dayCounts: options.onlyEventDays
         })
@@ -230,7 +255,7 @@ Module.register('MMM-CalendarExt3Agenda', {
             reduced.add(e)
           }
           return reduced
-        }, new Set())]
+        }, new Set()) ]
       } else {
         events = targetEvents.filter((ev) => {
           return !(ev.endDate <= boc || ev.startDate >= eoc)
