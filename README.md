@@ -71,7 +71,7 @@ More conventional;
 {
   module: "MMM-CalendarExt3Agenda",
   position: "top_left",
-  title: "My Agenda",
+  header: "My Agenda",
   config: {
     instanceId: "basicCalendar",
     locale: 'de-DE',
@@ -378,6 +378,10 @@ eventTransformer: (e) => {
 - The default `calendar` module cannot emit the exact starting time of `multidays-fullday-event which is passing current moment`. Always it starts from today despite of original event starting time. So this module displays these kinds of multidays-fullday-event weirdly.
 
 ## History
+### 1.4.5 (2024-06-03)
+- **FIXED** : Some bug for indexing out-of-month range.
+- **FIXED** : Some README misinstruction.
+
 ### 1.4.4 (2024-05-01)
 - **FIXED** :Duplicated applying of user eventFilter/eventTransformer etc.
 
