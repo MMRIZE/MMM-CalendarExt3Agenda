@@ -477,12 +477,13 @@ Module.register('MMM-CalendarExt3Agenda', {
       return dom
     }
 
-
-    const cm = new Date(moment.getFullYear(), moment.getMonth(), moment.getDate() + options.startDayIndex)
+    const sm = new Date(moment.getFullYear(), moment.getMonth(), moment.getDate() + options.startDayIndex)
+    const em = new Date(moment.getFullYear(), moment.getMonth(), moment.getDate() + options.endDayIndex)
     const tempPool = new Map()
     this.eventPool.forEach((v, k) => {
       tempPool.set(k, JSON.parse(JSON.stringify(v)))
     })
+
     const targetEvents = prepareEvents({
       targetEvents: regularizeEvents({
         eventPool: tempPool,
@@ -490,8 +491,8 @@ Module.register('MMM-CalendarExt3Agenda', {
       }),
       config: options,
       range: [
-        new Date(cm.getFullYear(), cm.getMonth(), 1).getTime(),
-        new Date(cm.getFullYear(), cm.getMonth() + 1, 0).getTime()
+        new Date(sm.getFullYear(), sm.getMonth(), 1).getTime(),
+        new Date(em.getFullYear(), em.getMonth() + 1, 0).getTime()
       ]
     })
     const copied = JSON.parse(JSON.stringify(targetEvents))
