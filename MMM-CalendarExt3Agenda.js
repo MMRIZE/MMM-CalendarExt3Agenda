@@ -180,7 +180,7 @@ Module.register('MMM-CalendarExt3Agenda', {
   getDom: function() {
     let dom = document.createElement('div')
     dom.innerHTML = ""
-    dom.classList.add('bodice', 'CX3A_' + this.instanceId, 'CX3A')
+    dom.classList.add('bodice', 'CX3A_' + this.activeConfig.instanceId, 'CX3A')
     if (this.activeConfig.fontSize) dom.style.setProperty('--fontsize', this.activeConfig.fontSize)
     if (!this.library?.loaded) {
       Log.warn('[CX3A] Module is not prepared yet, wait a while.')
