@@ -1,4 +1,4 @@
-/* global Module Log */
+/* global config Module Log */
 
 Module.register('MMM-CalendarExt3Agenda', {
   defaults: {

@@ -4,9 +4,11 @@
   "description": "Daily agenda view module of MagicMirror",
   "main": "MMM-CalendarExt3Agenda",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "postinstall": "git submodule update --init --recursive",
-    "postupdate": "git submodule update --init --recursive"
+    "postupdate": "git submodule update --init --recursive",
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -22,5 +24,10 @@
   "bugs": {
     "url": "https://github.com/MMRIZE/MMM-CalendarExt3Agenda/issues"
   },
-  "homepage": "https://github.com/MMRIZE/MMM-CalendarExt3Agenda#readme"
+  "homepage": "https://github.com/MMRIZE/MMM-CalendarExt3Agenda#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.11.1",
+    "eslint": "^9.11.1",
+    "globals": "^15.10.0"
+  }
 }

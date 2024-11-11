@@ -27,21 +27,17 @@ This is a sibling module of `[MMM-CalendarExt3](https://github.com/MMRIZE/MMM-Ca
 - customizing events: filtering, transforming
 - multi-instance available. You don't need to copy and rename the module. Just add one more configuration in your `config.js`.
 
-
 ## Install
 > Since ver 1.4.0, this module requires >MM.2.23 Or Chromium >110 or equivalent browser.
 ```sh
 cd ~/MagicMirror/modules
 git clone https://github.com/MMRIZE/MMM-CalendarExt3Agenda
-cd MMM-CalendarExt3Agenda
-npm install
 ```
 
 ## Update
 ```sh
 cd ~/MagicMirror/modules/MMM-CalendarExt3Agenda
 git pull
-npm update
 ```
 
 When some `submodule` is not updated, try this.
@@ -77,7 +73,7 @@ More conventional;
     locale: 'de-DE',
     firstDayOfWeek: 1,
     startDayIndex: -1,
-		endDayIndex: 10,
+    endDayIndex: 10,
     calendarSet: ['us_holiday', 'abfall', 'mytest'],
     ...
   }
@@ -467,5 +463,10 @@ eventTransformer: (e) => {
 - [MMM-CalendarExt3Agenda](https://github.com/MMRIZE/MMM-CalendarExt3Agenda)
 - [MMM-CalendarExt3Timeline](https://github.com/MMRIZE/MMM-CalendarExt3Timeline)
 - [MMM-CalendarExt3Journal](https://github.com/MMRIZE/MMM-CalendarExt3Journal)
+
+## Developer commands
+- `npm install` - Install devDependencies like ESLint.
+- `npm run lint` - Run linting and formatter checks.
+- `npm run lint:fix` - Fix linting and formatter issues.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y56IFLK)
