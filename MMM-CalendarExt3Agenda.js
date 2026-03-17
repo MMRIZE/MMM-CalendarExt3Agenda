@@ -1,4 +1,4 @@
-/* global Module Log */
+/* global Module Log config */
 
 Module.register('MMM-CalendarExt3Agenda', {
   defaults: {
@@ -18,7 +18,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     eventTimeOptions: {
       timeStyle: 'short'
     },
-    eventFilter: (ev) => { return true },
+    eventFilter: () => { return true },
     eventTransformer: (ev) => { return ev },
     refreshInterval: 1000 * 60 * 30,
     waitFetch: 1000 *  5,
@@ -44,6 +44,11 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     skipDuplicated: true,
     relativeNamedDayStyle: "narrow", // "narrow" or "short" or "long"
+    showMultidayEventsOnce: false,
+    multidayRangeLabelOptions: {
+      month: 'short',
+      day: 'numeric'
+    },
   },
 
   defaulNotifications: {
@@ -107,11 +112,11 @@ Module.register('MMM-CalendarExt3Agenda', {
       })
     })
 
-    let _domCreated = new Promise((resolve, reject) => {
+    let _domCreated = new Promise((resolve) => {
       this._domReady = resolve
     })
 
-    Promise.allSettled([_moduleLoaded, _domCreated]).then ((result) => {
+    Promise.allSettled([_moduleLoaded, _domCreated]).then (() => {
       this._ready = true
       this.library.prepareMagic()
       //let {payload, sender} = result[1].value
@@ -339,20 +344,46 @@ Module.register('MMM-CalendarExt3Agenda', {
       let agenda = document.createElement('div')
       agenda.classList.add('agenda')
       dateIndex = dateIndex.sort((a, b) => a - b)
+      const viewStartTime = dateIndex[0] ?? null
+      const sameDate = (left, right) => {
+        return (
+          left.getFullYear() === right.getFullYear()
+          && left.getMonth() === right.getMonth()
+          && left.getDate() === right.getDate()
+        )
+      }
+
+      const getDisplayDayTime = (ev) => {
+        if (!(options.showMultidayEventsOnce && ev.isMultiday)) return null
+        const startDay = new Date(+ev.startDate)
+        const normalizedStartDay = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate()).getTime()
+        if (viewStartTime === null) return normalizedStartDay
+
+        // When the event started before the current view window, pin it to the first visible day.
+        return Math.max(normalizedStartDay, viewStartTime)
+      }
+
       for (const [i, date] of dateIndex.entries()) {
         let tm = new Date(date)
         let eotm = new Date(tm.getFullYear(), tm.getMonth(), tm.getDate(), 23, 59, 59, 999)
         let dayDom = makeCellDom(tm, i)
         let body = dayDom.getElementsByClassName('cellBody')[0]
-        let {fevs, sevs} = events.filter((ev) => {
+        let visibleEvents = events.filter((ev) => {
           return !(ev.endDate <= tm.getTime() || ev.startDate >= eotm.getTime())
-        }).reduce((result, ev) => {
+        }).filter((ev) => {
+          const displayDayTime = getDisplayDayTime(ev)
+          if (displayDayTime === null) return true
+          return sameDate(new Date(displayDayTime), tm)
+        })
+
+        let {fevs, sevs} = visibleEvents.reduce((result, ev) => {
           const target = (ev.isFullday) ? result.fevs : result.sevs
           target.push(ev)
           return result
         }, {fevs: [], sevs: []})
         let eventCounts = fevs.length + sevs.length
         dayDom.dataset.eventsCounts = eventCounts
+        if (eventCounts === 0 && options.showMultidayEventsOnce && options.onlyEventDays >= 1) continue
         if (eventCounts === 0) dayDom.classList.add('noEvents')
         for (const [ key, value ] of Object.entries({ 'fullday': fevs, 'single': sevs })) {
           let tDom = document.createElement('div')
@@ -364,6 +395,8 @@ Module.register('MMM-CalendarExt3Agenda', {
               eventTimeOptions: options.eventTimeOptions,
               locale: options.locale,
               useIconify: options.useIconify,
+              showMultidayEventsOnce: options.showMultidayEventsOnce,
+              multidayRangeLabelOptions: options.multidayRangeLabelOptions,
             }, tm)
             tDom.appendChild(ev)
           }
@@ -385,7 +418,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       let view = document.createElement('table')
       view.classList.add('miniMonth')
       let caption = document.createElement('caption')
-      caption.innerHTML = new Intl.DateTimeFormat(options.locale, options.miniMonthTitleOptions).formatToParts(cm).reduce((prev, cur, curIndex, arr) => {
+      caption.innerHTML = new Intl.DateTimeFormat(options.locale, options.miniMonthTitleOptions).formatToParts(cm).reduce((prev, cur, curIndex) => {
         prev = prev + `<span class="calendarTimeParts ${cur.type} seq_${curIndex}">${cur.value}</span>`
         return prev
       }, '')
