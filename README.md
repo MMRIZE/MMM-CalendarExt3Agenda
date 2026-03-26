@@ -123,8 +123,8 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`eventTimeOptions` | {timeStyle: 'short'} | The format of event time. It varies by the `locale` and this option. <br> `locale:'en-US'`, the default displaying will be `3:45 pm`.<br> See [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters) |
 |`eventFilter`| callback function | See the `Filtering` part.|
 |`eventTransformer`| callback function | See the `Transforming` part.|
-|`displayRepeatingCountTitle` | false | Whether to append a repeating count to event title. Useful for anniversaries like birthdays. |
-|`repeatingCountTitle` | "" | A suffix label for repeating count title. <br> e.g. `repeatingCountTitle: 'years'` will display `, 10 years`. |
+|`displayRepeatingCountTitle` | false | Whether to append a repeating count (number of years since the event's first year) to the event title. The first year is taken from the year of the event's original start date in your calendar data. Useful for anniversaries like birthdays. |
+|`repeatingCountTitle` | "" | Suffix label shown after the numeric repeating count when `displayRepeatingCountTitle` is true. Do not include leading commas or spaces in this value; the module automatically adds the preceding `", "` and a space between the number and this label. <br> e.g. `repeatingCountTitle: 'years'` will display `, 10 years`. |
 |`waitFetch`| 5000 | (ms) waiting the fetching of last calendar to prevent flickering view by too frequent fetching. |
 |`refreshInterval`| 1800000 | (ms) refresh view by force if you need it. |
 |`animationSpeed` | 1000 | (ms) Refreshing the view smoothly. |
