@@ -20,6 +20,8 @@ Module.register('MMM-CalendarExt3Agenda', {
     },
     eventFilter: () => { return true },
     eventTransformer: (ev) => { return ev },
+    displayRepeatingCountTitle: false, // When true, appends the number of years since firstYear to the event title (e.g. for birthdays)
+    repeatingCountTitle: "", // The label appended after the year count (e.g. "years"). Empty string disables the feature even when displayRepeatingCountTitle is true.
     refreshInterval: 1000 * 60 * 30,
     waitFetch: 1000 *  5,
     animationSpeed: 1000,
@@ -186,6 +188,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     let dom = document.createElement('div')
     dom.innerHTML = ""
     dom.classList.add('bodice', 'CX3A_' + this.instanceId, 'CX3A')
+    if (this.activeConfig.displayRepeatingCountTitle) dom.classList.add('displayRepeatingCountTitle')
     if (this.activeConfig.fontSize) dom.style.setProperty('--fontsize', this.activeConfig.fontSize)
     if (!this.library?.loaded) {
       Log.warn('[CX3A] Module is not prepared yet, wait a while.')
@@ -376,16 +379,18 @@ Module.register('MMM-CalendarExt3Agenda', {
           return sameDate(new Date(displayDayTime), tm)
         })
 
-        let {fevs, sevs} = visibleEvents.reduce((result, ev) => {
-          const target = (ev.isFullday) ? result.fevs : result.sevs
+        let {mvs, fevs, sevs} = visibleEvents.reduce((result, ev) => {
+          const target = (options.showMultidayEventsOnce && ev.isMultiday)
+            ? result.mvs
+            : ((ev.isFullday) ? result.fevs : result.sevs)
           target.push(ev)
           return result
-        }, {fevs: [], sevs: []})
-        let eventCounts = fevs.length + sevs.length
+        }, {mvs: [], fevs: [], sevs: []})
+        let eventCounts = mvs.length + fevs.length + sevs.length
         dayDom.dataset.eventsCounts = eventCounts
         if (eventCounts === 0 && options.showMultidayEventsOnce && options.onlyEventDays >= 1) continue
         if (eventCounts === 0) dayDom.classList.add('noEvents')
-        for (const [ key, value ] of Object.entries({ 'fullday': fevs, 'single': sevs })) {
+        for (const [ key, value ] of Object.entries({ 'multiday': mvs, 'fullday': fevs, 'single': sevs })) {
           let tDom = document.createElement('div')
           tDom.classList.add(key)
           for (let e of value) {
