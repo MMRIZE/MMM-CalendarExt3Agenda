@@ -26,6 +26,7 @@ This is a sibling module of `[MMM-CalendarExt3](https://github.com/MMRIZE/MMM-Ca
 - locale-aware calendar
 - customizing events: filtering, transforming
 - multi-instance available. You don't need to copy and rename the module. Just add one more configuration in your `config.js`.
+- robust text normalization for event fields (e.g. nested Outlook/iCloud payloads)
 
 
 ## Install
@@ -122,6 +123,8 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`eventTimeOptions` | {timeStyle: 'short'} | The format of event time. It varies by the `locale` and this option. <br> `locale:'en-US'`, the default displaying will be `3:45 pm`.<br> See [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters) |
 |`eventFilter`| callback function | See the `Filtering` part.|
 |`eventTransformer`| callback function | See the `Transforming` part.|
+|`displayRepeatingCountTitle` | false | Whether to append a repeating count to event title. Useful for anniversaries like birthdays. |
+|`repeatingCountTitle` | "" | A suffix label for repeating count title. <br> e.g. `repeatingCountTitle: 'years'` will display `, 10 years`. |
 |`waitFetch`| 5000 | (ms) waiting the fetching of last calendar to prevent flickering view by too frequent fetching. |
 |`refreshInterval`| 1800000 | (ms) refresh view by force if you need it. |
 |`animationSpeed` | 1000 | (ms) Refreshing the view smoothly. |
@@ -136,6 +139,8 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`miniMonthTitleOptions` | { month: 'long', year: 'numeric' } | Title of month calendar (e.g. Aug. 2022) |
 |`miniMonthWeekdayOptions` | { weekday: 'short' } | A name of weekday of month calendar (e.g. Mon) |
 |`onlyEventDays` | 0 | `0` or `false` show empty days, `N:Integer bigger than 0` will show `N` days which have event(s) in that day.|
+|`showMultidayEventsOnce` | false | Show each multiday event only once in the visible range, instead of repeating on every day. |
+|`multidayRangeLabelOptions` | { month: 'short', day: 'numeric' } | The format of multiday range label when `showMultidayEventsOnce` is enabled. <br> See [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters) |
 |`skipDuplicated` | true | On `true`, duplicated events(same title, same start/end) from any calendars will be skipped except one. |
 |`relativeNamedDayOptions`| { style: 'long' } | A name of the relative name (e.g. "Today" or "In 2 days" |
 
