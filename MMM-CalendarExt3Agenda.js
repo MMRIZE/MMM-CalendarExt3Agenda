@@ -18,7 +18,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     eventTimeOptions: {
       timeStyle: 'short'
     },
-    eventFilter: (ev) => { return true },
+    eventFilter: () => { return true },
     eventTransformer: (ev) => { return ev },
     refreshInterval: 1000 * 60 * 30,
     waitFetch: 1000 *  5,
@@ -107,11 +107,11 @@ Module.register('MMM-CalendarExt3Agenda', {
       })
     })
 
-    let _domCreated = new Promise((resolve, reject) => {
+    let _domCreated = new Promise((resolve) => {
       this._domReady = resolve
     })
 
-    Promise.allSettled([_moduleLoaded, _domCreated]).then ((result) => {
+    Promise.allSettled([_moduleLoaded, _domCreated]).then (() => {
       this._ready = true
       this.library.prepareMagic()
       //let {payload, sender} = result[1].value
@@ -239,7 +239,7 @@ Module.register('MMM-CalendarExt3Agenda', {
           }
         })
       }
-      let events = []
+      let events
       let boc = getRelativeDate(moment, options.startDayIndex).valueOf()
       let eoc = getRelativeDate(moment, options.endDayIndex + 1).valueOf()
       let dateIndex = []
@@ -385,7 +385,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       let view = document.createElement('table')
       view.classList.add('miniMonth')
       let caption = document.createElement('caption')
-      caption.innerHTML = new Intl.DateTimeFormat(options.locale, options.miniMonthTitleOptions).formatToParts(cm).reduce((prev, cur, curIndex, arr) => {
+      caption.innerHTML = new Intl.DateTimeFormat(options.locale, options.miniMonthTitleOptions).formatToParts(cm).reduce((prev, cur, curIndex) => {
         prev = prev + `<span class="calendarTimeParts ${cur.type} seq_${curIndex}">${cur.value}</span>`
         return prev
       }, '')
