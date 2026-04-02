@@ -74,6 +74,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     }
 
     options.instanceId = options.instanceId ?? this.identifier
+    options.showMiniMonthCalendarMonths = Math.max(1, Math.min(options.showMiniMonthCalendarMonths ?? 1, 6))
     this.notifications = {
       weatherNotification: options.weatherNotification ?? this.defaulNotifications.weatherNotification,
       weatherPayload: (typeof options.weatherPayload === 'function') ? options.weatherPayload : this.defaulNotifications.weatherPayload,
@@ -418,8 +419,9 @@ Module.register('MMM-CalendarExt3Agenda', {
       return dom
     }
 
-    const drawMiniMonth = (events, offset) => {
-      const cm = new Date(moment.getFullYear(), moment.getMonth() + offset, moment.getDate() + options.startDayIndex)
+    const drawMiniMonth = (events, monthOffset = 0) => {
+      if (!options.showMiniMonthCalendar) return dom
+      const cm = new Date(moment.getFullYear(), moment.getMonth() + monthOffset, monthOffset === 0 ? moment.getDate() + options.startDayIndex : 1)
       let bwoc = getBeginOfWeek(new Date(cm.getFullYear(), cm.getMonth(), 1), options)
       let ewoc = getBeginOfWeek(new Date(cm.getFullYear(), cm.getMonth() + 1, 0), options)
       let im = new Date(bwoc.getTime())
@@ -538,10 +540,8 @@ Module.register('MMM-CalendarExt3Agenda', {
       ]
     })
     const copied = JSON.parse(JSON.stringify(targetEvents))
-    if (options.showMiniMonthCalendar) {
-      for (let i = 0; i < options.showMiniMonthCalendarMonths; i++) {
-        dom = drawMiniMonth([...copied], i)
-      }
+    for (let i = 0; i < options.showMiniMonthCalendarMonths; i++) {
+      dom = drawMiniMonth([...copied], i)
     }
     dom = drawAgenda(prepareAgenda([...copied]))
     return dom

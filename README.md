@@ -129,7 +129,7 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`weatherNotification`| 'WEATHER_UPDATED' | A carrier notification of weather forecasting source |
 |`weatherPayload` | callback function | A converter for weather foracasting payload before using it. |
 |`showMiniMonthCalendar` | true | Show mini monthly calendar. |
-|`showMiniMonthCalendarMonths` | 1 | Number of months to show in mini month calendar. |
+|`showMiniMonthCalendarMonths` | 1 | Number of months to show in the mini calendar (1–6). Useful at the end of a month to already see the next one. |
 |`miniMonthTitleOptions` | { month: 'long', year: 'numeric' } | Title of month calendar (e.g. Aug. 2022) |
 |`miniMonthWeekdayOptions` | { weekday: 'short' } | A name of weekday of month calendar (e.g. Mon) |
 |`onlyEventDays` | 0 | `0` or `false` show empty days, `N:Integer bigger than 0` will show `N` days which have event(s) in that day.|
