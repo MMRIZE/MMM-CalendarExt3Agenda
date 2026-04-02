@@ -26,8 +26,8 @@
   },
   "homepage": "https://github.com/MMRIZE/MMM-CalendarExt3Agenda#readme",
   "devDependencies": {
-    "@eslint/js": "^9.11.1",
-    "eslint": "^9.11.1",
-    "globals": "^15.10.0"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.1.0",
+    "globals": "^17.4.0"
   }
 }
