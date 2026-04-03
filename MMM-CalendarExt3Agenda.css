@@ -77,11 +77,11 @@
 */
 
 .CX3A .cell.weekend_1 .cellHeaderMain * {
-  color: dodgerblue;
+  color: var(--weekend_1_color);
 }
 
 .CX3A .cell.weekend_2 .cellHeaderMain * {
-  color: crimson;
+  color: var(--weekend_2_color);
 }
 
 .CX3A .cell.today .cellHeaderMain * {
