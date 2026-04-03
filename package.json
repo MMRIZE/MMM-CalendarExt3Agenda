@@ -29,6 +29,7 @@
   "homepage": "https://github.com/MMRIZE/MMM-CalendarExt3Agenda#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@eslint/markdown": "^8.0.1",
     "commit-and-tag-version": "^12.7.1",
     "eslint": "^10.1.0",
     "globals": "^17.4.0"
