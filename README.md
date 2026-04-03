@@ -1,11 +1,10 @@
 # MMM-CalendarExt3Agenda
-Daily agenda view module of MagicMirror
 
+Daily agenda view module of [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror).
 
 ## Screenshot
-<img src="https://raw.githubusercontent.com/MMRIZE/public_ext_storage/main/MMM-CalendarExt3Agenda/CX3A_110.png" width="800">
 
-
+<img src="screenshot.png" alt="MMM-CalendarExt3Agenda preview" width="800">
 
 ## Concept
 
@@ -20,7 +19,8 @@ This is a sibling module of `[MMM-CalendarExt3](https://github.com/MMRIZE/MMM-Ca
 
 ### Relation with `CX3`
 - Nothing. It is independent from `MMM-CalendarExt3`. But of course, you can use them together.
-<img src="https://raw.githubusercontent.com/MMRIZE/public_ext_storage/main/MMM-CalendarExt3Agenda/preview2.png" width="800">
+
+<img src="screenshot2.png" alt="MMM-CalendarExt3Agenda preview with MMM-CalendarExt3" width="800">
 
 ### Main Features
 - locale-aware calendar
