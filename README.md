@@ -46,10 +46,10 @@ cd ~/MagicMirror/modules/MMM-CalendarExt3Agenda
 git submodule update --init --recursive
 ```
 
-If you want to return to `1.1.5` version,
+If you want to return to `1.4.6` version,
 ```sh
 cd ~/MagicMirror/modules/MMM-CalendarExt3Agenda
-git checkout dev-1.1.5
+git switch --detach dev-1.4.6
 ```
 
 ## Config
