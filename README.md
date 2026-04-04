@@ -28,16 +28,21 @@ This is a sibling module of `[MMM-CalendarExt3](https://github.com/MMRIZE/MMM-Ca
 - multi-instance available. You don't need to copy and rename the module. Just add one more configuration in your `config.js`.
 
 ## Install
-> Since ver 1.4.0, this module requires >MM.2.23 Or Chromium >110 or equivalent browser.
+
 ```sh
 cd ~/MagicMirror/modules
 git clone https://github.com/MMRIZE/MMM-CalendarExt3Agenda
+cd MMM-CalendarExt3Agenda
+npm install --omit=dev
 ```
+
+**Note:** `npm install` is necessary to install the submodule.
 
 ## Update
 ```sh
 cd ~/MagicMirror/modules/MMM-CalendarExt3Agenda
 git pull
+npm install --omit=dev
 ```
 
 When some `submodule` is not updated, try this.
@@ -53,6 +58,7 @@ git switch --detach dev-1.4.6
 ```
 
 ## Config
+
 Anyway, even this simplest will work.
 ```js
 {
