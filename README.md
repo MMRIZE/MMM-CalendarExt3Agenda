@@ -402,7 +402,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list of changes.
 
 ## Developer commands
 - `npm install` - Install devDependencies like ESLint.
-- `npm run lint` - Run linting and formatter checks.
-- `npm run lint:fix` - Fix linting and formatter issues.
+- `node --run lint` - Run linting and formatter checks.
+- `node --run lint:fix` - Fix linting and formatter issues.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y56IFLK)

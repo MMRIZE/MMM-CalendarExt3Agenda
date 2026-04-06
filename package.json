@@ -10,7 +10,7 @@
     "postinstall": "git submodule update --init --recursive",
     "postupdate": "git submodule update --init --recursive",
     "release": "commit-and-tag-version --config ./changelog.config.js",
-    "test": "npm run lint"
+    "test": "node --run lint"
   },
   "repository": {
     "type": "git",
