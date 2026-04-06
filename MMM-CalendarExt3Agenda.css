@@ -148,6 +148,16 @@
   display: none;
 }
 
+.CX3A.displayRepeatingCountTitle .cellBody .fullday .event {
+  max-width: 100%;
+}
+
+.CX3A.displayRepeatingCountTitle .cellBody .fullday .event .title {
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+}
+
 .CX3A .cellWeather {
   display: flex;
   justify-content: flex-end;

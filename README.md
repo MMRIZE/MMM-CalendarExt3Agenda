@@ -124,6 +124,7 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`eventTimeOptions` | {timeStyle: 'short'} | The format of event time. It varies by the `locale` and this option. <br> `locale:'en-US'`, the default displaying will be `3:45 pm`.<br> See [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters) |
 |`eventFilter`| callback function | See the `Filtering` part.|
 |`eventTransformer`| callback function | See the `Transforming` part.|
+|`displayRepeatingCountTitle` | `true` | When `true`, allows the full event title to be visible (no overflow clipping) in fullday event cells. Intended for use with `eventTransformer` to append a repeating count (e.g. number of years) to anniversary-style events. |
 |`waitFetch`| 5000 | (ms) waiting the fetching of last calendar to prevent flickering view by too frequent fetching. |
 |`refreshInterval`| 1800000 | (ms) refresh view by force if you need it. |
 |`animationSpeed` | 1000 | (ms) Refreshing the view smoothly. |
