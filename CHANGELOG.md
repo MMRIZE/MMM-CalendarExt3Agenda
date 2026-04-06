@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.0](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/compare/v1.5.0...v1.6.0) (2026-04-06)
+
+
+### Added
+
+* add displayRepeatingCountTitle option ([#88](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/issues/88)) ([65c336d](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/65c336d1eacf0ddb95bf97f6082a2ca011c2284c))
+* add showMultidayEventsOnce option ([#87](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/issues/87)) ([d2e02e3](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/d2e02e35622cc5bc22663c3077a84b5bc2b22dda))
+
+
+### Documentation
+
+* update installation instructions and add version requirements ([5c7a925](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/5c7a9255d30e7872f3f3a9060dd66e042d32f52f))
+
+
+### Chores
+
+* simplify ESLint commands ([df661bd](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/df661bd81a0e662742dbf2eef815037b22249fec))
+* update devDependencies ([53b5424](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/53b5424f2745d397e64d3152c18f0b3838e717f3))
+* update test and lint commands ([844f850](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/844f850434e5587082d6399826b583d0f012d9bf))
+
 ## [1.5.0](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/compare/v1.4.7...v1.5.0) (2026-04-03)
 
 
