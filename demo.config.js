@@ -9,9 +9,14 @@ const config = {
     },
     {
       module: "calendar",
-      position: "top_left",
+      position: "top_center",
       config: {
         calendars: [
+          {
+            name: "Demo Calendar",
+            url: "http://localhost:8080/modules/MMM-CalendarExt3Agenda/demo.ics",
+            color: "#4CAF50"
+          },
           {
             name: "Public Holidays Germany",
             url: "https://www.calendarlabs.com/ical-calendar/ics/76/Germany_Holidays.ics",
@@ -23,35 +28,62 @@ const config = {
             color: "#2196F3"
           }
         ],
-        showSymbol: true
+        showSymbol: true,
+        broadcastPastEvents: true,
+        maximalNumberOfDays: 60,
+        maximumEntries: 50
       }
     },
     {
       module: "MMM-CalendarExt3Agenda",
-      position: "bottom_center",
+      position: "bottom_left",
+      header: "showMultidayEventsOnce: false (default)",
       config: {
-        // Show the next 14 days
+        instanceId: "demo-default",
         startDayIndex: 0,
-        endDayIndex: 14,
-
-        // Only show days that actually have events
+        endDayIndex: 21,
         onlyEventDays: 7,
-
-        // Test: eventTransformer restores correctly after MM v2.35.0 (functions stripped from JSON config).
-        // If this works, ALL event titles will be prefixed with "✅ ".
-        // Without the fix they show up without prefix.
+        showMultidayEventsOnce: false,
+        // Test displayRepeatingCountTitle: full-day event titles don't get clipped
+        displayRepeatingCountTitle: true,
+        // Append anniversary count to yearly events to demo displayRepeatingCountTitle
         eventTransformer: (ev) => {
-          ev.title = "✅ " + ev.title
+          if (ev.recurringEvent && ev.firstYear) {
+            const years = new Date().getFullYear() - ev.firstYear
+            if (years > 0) ev.title = ev.title + " (" + years + ")"
+          }
           return ev
         },
-
-        // Test: eventFilter restores correctly
-        eventFilter: (ev) => {
-          // Hide events that are more than 30 days in the future
-          return ev.startDate < Date.now() + 30 * 24 * 60 * 60 * 1000
-        },
-
+        eventFilter: (ev) => ev.startDate < Date.now() + 60 * 24 * 60 * 60 * 1000,
         showMiniMonthCalendar: true,
+        useSymbol: true,
+        animationSpeed: 1000,
+        waitFetch: 3000,
+        refreshInterval: 1000 * 60 * 30
+      }
+    },
+    {
+      module: "MMM-CalendarExt3Agenda",
+      position: "bottom_right",
+      header: "showMultidayEventsOnce: true",
+      config: {
+        instanceId: "demo-once",
+        startDayIndex: 0,
+        endDayIndex: 21,
+        onlyEventDays: 7,
+        // Test showMultidayEventsOnce: multiday events appear only on their first day
+        showMultidayEventsOnce: true,
+        multidayRangeLabelOptions: { month: "short", day: "numeric" },
+        displayRepeatingCountTitle: true,
+        eventTransformer: (ev) => {
+          if (ev.recurringEvent && ev.firstYear) {
+            const years = new Date().getFullYear() - ev.firstYear
+            if (years > 0) ev.title = ev.title + " (" + years + ")"
+          }
+          return ev
+        },
+        eventFilter: (ev) => ev.startDate < Date.now() + 60 * 24 * 60 * 60 * 1000,
+        showMiniMonthCalendar: false,
         useSymbol: true,
         animationSpeed: 1000,
         waitFetch: 3000,
