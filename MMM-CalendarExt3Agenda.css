@@ -110,6 +110,13 @@
   gap: 5px;
 }
 
+.CX3A .cellBody .multiday {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
 .CX3A .event .headline {
   display: flex;
   justify-content: flex-start;
@@ -140,14 +147,6 @@
   font-weight: bold;
 }
 
-.CX3A .cellBody .fullday .event > :not(.headline) {
-  display: none;
-}
-
-.CX3A .cellBody .fullday .event .headline :not(.title) {
-  display: none;
-}
-
 .CX3A.displayRepeatingCountTitle .cellBody .fullday .event {
   max-width: 100%;
 }
@@ -156,6 +155,41 @@
   overflow: visible;
   white-space: normal;
   text-overflow: clip;
+}
+
+.CX3A .cellBody .fullday .event > :not(.headline) {
+  display: none;
+}
+
+.CX3A .cellBody .fullday .event .headline :not(.title) {
+  display: none;
+}
+
+.CX3A .cellBody .multiday .event {
+  background-color: var(--calendarColor);
+  border-radius: 5px;
+  padding: 2px 5px;
+  display: block;
+  width: fit-content;
+  line-height: 100%;
+}
+
+.CX3A .cellBody .multiday .event .headline {
+  gap: 4px;
+}
+
+.CX3A .cellBody .multiday .event .title,
+.CX3A .cellBody .multiday .event .time,
+.CX3A .cellBody .multiday .event .symbol {
+  color: var(--oppositeColor);
+}
+
+.CX3A .cellBody .multiday .event .title {
+  font-weight: bold;
+}
+
+.CX3A .cellBody .multiday .event > :not(.headline) {
+  display: none;
 }
 
 .CX3A .cellWeather {

@@ -140,6 +140,8 @@ All the properties are omittable, and if omitted, a default value will be applie
 |`miniMonthTitleOptions` | { month: 'long', year: 'numeric' } | Title of month calendar (e.g. Aug. 2022) |
 |`miniMonthWeekdayOptions` | { weekday: 'short' } | A name of weekday of month calendar (e.g. Mon) |
 |`onlyEventDays` | 0 | `0` or `false` show empty days, `N:Integer bigger than 0` will show `N` days which have event(s) in that day.|
+|`showMultidayEventsOnce` | false | When `true`, each multiday event appears only once in the visible range (pinned to its first visible day) instead of repeating on every day it spans. |
+|`multidayRangeLabelOptions` | { month: 'short', day: 'numeric' } | Format for the date range label shown on a multiday event when `showMultidayEventsOnce` is enabled. See [Intl.DateTimeFormat options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters). |
 |`skipDuplicated` | true | On `true`, duplicated events(same title, same start/end) from any calendars will be skipped except one. |
 |`relativeNamedDayOptions`| { style: 'long' } | A name of the relative name (e.g. "Today" or "In 2 days" |
 
