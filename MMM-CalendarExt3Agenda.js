@@ -46,6 +46,11 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     skipDuplicated: true,
     relativeNamedDayStyle: "narrow", // "narrow" or "short" or "long"
+    showMultidayEventsOnce: false,
+    multidayRangeLabelOptions: {
+      month: 'short',
+      day: 'numeric'
+    },
   },
 
   defaulNotifications: {
@@ -385,22 +390,46 @@ Module.register('MMM-CalendarExt3Agenda', {
       let agenda = document.createElement('div')
       agenda.classList.add('agenda')
       dateIndex = dateIndex.sort((a, b) => a - b)
+      const viewStartTime = dateIndex[0] ?? null
+      const sameDate = (left, right) => {
+        return (
+          left.getFullYear() === right.getFullYear()
+          && left.getMonth() === right.getMonth()
+          && left.getDate() === right.getDate()
+        )
+      }
+      const getDisplayDayTime = (ev) => {
+        if (!(options.showMultidayEventsOnce && ev.isMultiday)) return null
+        const startDay = new Date(+ev.startDate)
+        const normalizedStartDay = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate()).getTime()
+        if (viewStartTime === null) return normalizedStartDay
+        // When the event started before the current view window, pin it to the first visible day.
+        return Math.max(normalizedStartDay, viewStartTime)
+      }
       for (const [i, date] of dateIndex.entries()) {
         let tm = new Date(date)
         let eotm = new Date(tm.getFullYear(), tm.getMonth(), tm.getDate(), 23, 59, 59, 999)
         let dayDom = makeCellDom(tm, i)
         let body = dayDom.getElementsByClassName('cellBody')[0]
-        let {fevs, sevs} = events.filter((ev) => {
+        let visibleEvents = events.filter((ev) => {
           return !(ev.endDate <= tm.getTime() || ev.startDate >= eotm.getTime())
-        }).reduce((result, ev) => {
-          const target = (ev.isFullday) ? result.fevs : result.sevs
+        }).filter((ev) => {
+          const displayDayTime = getDisplayDayTime(ev)
+          if (displayDayTime === null) return true
+          return sameDate(new Date(displayDayTime), tm)
+        })
+        let {mvs, fevs, sevs} = visibleEvents.reduce((result, ev) => {
+          const target = (options.showMultidayEventsOnce && ev.isMultiday)
+            ? result.mvs
+            : ((ev.isFullday) ? result.fevs : result.sevs)
           target.push(ev)
           return result
-        }, {fevs: [], sevs: []})
-        let eventCounts = fevs.length + sevs.length
+        }, {mvs: [], fevs: [], sevs: []})
+        let eventCounts = mvs.length + fevs.length + sevs.length
         dayDom.dataset.eventsCounts = eventCounts
+        if (eventCounts === 0 && options.onlyEventDays >= 1) continue
         if (eventCounts === 0) dayDom.classList.add('noEvents')
-        for (const [ key, value ] of Object.entries({ 'fullday': fevs, 'single': sevs })) {
+        for (const [ key, value ] of Object.entries({ 'multiday': mvs, 'fullday': fevs, 'single': sevs })) {
           let tDom = document.createElement('div')
           tDom.classList.add(key)
           for (let e of value) {
@@ -410,6 +439,8 @@ Module.register('MMM-CalendarExt3Agenda', {
               eventTimeOptions: options.eventTimeOptions,
               locale: options.locale,
               useIconify: options.useIconify,
+              showMultidayEventsOnce: options.showMultidayEventsOnce,
+              multidayRangeLabelOptions: options.multidayRangeLabelOptions,
             }, tm)
             tDom.appendChild(ev)
           }
