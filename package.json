@@ -5,8 +5,8 @@
   "main": "MMM-CalendarExt3Agenda",
   "scripts": {
     "demo": "cd ../../ && MM_CONFIG_FILE=modules/MMM-CalendarExt3Agenda/demo.config.js node --run start:dev",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "postinstall": "git submodule update --init --recursive",
     "postupdate": "git submodule update --init --recursive",
     "release": "commit-and-tag-version --config ./changelog.config.js",
