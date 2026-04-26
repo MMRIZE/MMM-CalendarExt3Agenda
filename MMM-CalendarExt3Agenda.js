@@ -144,6 +144,11 @@ Module.register('MMM-CalendarExt3Agenda', {
    * The node_helper reads the original config file server-side where functions
    * are preserved, converts them to strings, and sends them here for
    * reconstruction via new Function().
+   *
+   * To restore closure context (e.g., variables like myVariable that the functions
+   * reference), the node_helper also extracts the variable preamble (all top-level
+   * variable declarations from config.js before "let config = {") and sends it here.
+   * We then evaluate the function within that preamble's scope so closure variables work.
    */
   socketNotificationReceived: function (notification, payload) {
     if (notification !== "CX3A_FUNCTIONS_RESTORED") return
@@ -151,11 +156,17 @@ Module.register('MMM-CalendarExt3Agenda', {
 
     const configKeys = ["eventTransformer", "eventFilter", "eventSorter"]
     const notificationKeys = ["eventPayload", "weatherPayload"]
+    const preamble = payload.variablePreamble || ""
 
     for (const key of [...configKeys, ...notificationKeys]) {
       if (!payload.functions[key]) continue
       try {
-        const fn = new Function("return " + payload.functions[key])()
+        // Create a function factory that first evaluates the variable preamble
+        // (declaring all variables in its scope), then returns the callback function.
+        // The callback function now has access to those variables through closure.
+        const fnFactory = new Function(preamble + "\nreturn " + payload.functions[key])
+        const fn = fnFactory()
+
         if (typeof fn !== "function") continue
         if (configKeys.includes(key)) {
           this.activeConfig[key] = fn
