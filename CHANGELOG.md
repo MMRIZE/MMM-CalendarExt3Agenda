@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.1](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/compare/v1.6.0...v1.6.1) (2026-04-26)
+
+
+### Fixed
+
+* **closure:** restore closure context in config callbacks ([4e7ec17](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/4e7ec17e18826b19b3cbc98faf9a807bdbc1c71b)), closes [#260](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/issues/260)
+
+
+### Chores
+
+* add type field to package.json ([42b3c73](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/42b3c7305e03000fafa176c34e1275fc2c57ff25))
+* improve demo with local ICS and showcase new features ([2a70c28](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/2a70c28a5e1b6f334996d0e153d06f45f8ce9e19))
+* update devDependencies ([1356926](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/13569263705d6c68c49b186acabd059517aa7c76))
+
+
+### Tests
+
+* add node:test unit tests and CI workflow ([6b959ca](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/6b959ca734b9dae8ac5102675527fdb7a831dd27))
+
 ## [1.6.0](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/compare/v1.5.0...v1.6.0) (2026-04-06)
 
 
