@@ -65,6 +65,39 @@ Module.register('MMM-CalendarExt3Agenda', {
     return ['MMM-CalendarExt3Agenda.css']
   },
 
+  socketNotificationReceived: function (notification, payload) {
+    if (notification !== "CX3A_FUNCTIONS_RESTORED") return
+    if (payload.identifier !== this.identifier) return
+
+    const configKeys = ["eventTransformer", "eventFilter", "eventSorter"]
+    const notificationKeys = ["eventPayload", "weatherPayload"]
+    const preamble = payload.variablePreamble || ""
+
+    for (const key of [...configKeys, ...notificationKeys]) {
+      if (!payload.functions[key]) continue
+      try {
+        // Create a function factory that first evaluates the variable preamble
+        // (declaring all variables in its scope), then returns the callback function.
+        // The callback function now has access to those variables through closure.
+        const fnFactory = new Function(preamble + "\nreturn " + payload.functions[key])
+        const fn = fnFactory()
+
+        if (typeof fn !== "function") continue
+        if (configKeys.includes(key)) {
+          this.activeConfig[key] = fn
+          this.originalConfig[key] = fn
+        }
+        if (notificationKeys.includes(key)) {
+          this.notifications[key] = fn
+        }
+      } catch (error) {
+        Log.warn(`[CX3A] Could not restore config function "${key}":`, error.message)
+      }
+    }
+
+    this._functionsReady()
+  },
+
 
   regularizeConfig: function (options) {
     const weekInfoFallback = {
@@ -103,6 +136,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     this.refreshTimer = null
 
     this._ready = false
+    this.sendSocketNotification("CX3A_REGISTER", { config: this.config, identifier: this.identifier })
 
     let _moduleLoaded = new Promise((resolve, reject) => {
       import('/' + this.file('CX3_Shared/CX3_shared.mjs')).then((m) => {
