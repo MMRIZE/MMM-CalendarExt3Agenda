@@ -10,7 +10,7 @@ module.exports = NodeHelper.create({
     // TODO: Remove when upstream MM adds closure variable support to function reviver.
     this.functionConfigs = []
     this.variablePreamble = ""
-    this.registrationCount = 0
+    this.identifierFunctions = new Map()
     this.loadFunctionConfigs()
   },
 
@@ -109,14 +109,15 @@ module.exports = NodeHelper.create({
 
   socketNotificationReceived (notification, payload) {
     if (notification === "CX3A_REGISTER") {
-      // registrationCount maps to the index in functionConfigs because MagicMirror
-      // initializes modules sequentially in config order, so the nth CX3A_REGISTER
-      // corresponds to the nth MMM-CalendarExt3Agenda entry in config.modules.
-      const index = this.registrationCount++
+      const { identifier } = payload
+      if (!this.identifierFunctions.has(identifier)) {
+        const index = this.identifierFunctions.size
+        this.identifierFunctions.set(identifier, this.functionConfigs[index] || {})
+      }
       this.sendSocketNotification("CX3A_FUNCTIONS_RESTORED", {
-        identifier: payload.identifier,
+        identifier,
         variablePreamble: this.variablePreamble,
-        functions: this.functionConfigs[index] || {}
+        functions: this.identifierFunctions.get(identifier)
       })
     }
   }

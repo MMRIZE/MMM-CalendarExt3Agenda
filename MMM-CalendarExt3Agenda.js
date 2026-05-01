@@ -136,7 +136,11 @@ Module.register('MMM-CalendarExt3Agenda', {
     this.refreshTimer = null
 
     this._ready = false
-    this.sendSocketNotification("CX3A_REGISTER", { config: this.config, identifier: this.identifier })
+    const _functionsRestored = new Promise((resolve) => {
+      this._functionsReady = resolve
+      setTimeout(resolve, 5000)
+    })
+    this.sendSocketNotification("CX3A_REGISTER", { identifier: this.identifier })
 
     let _moduleLoaded = new Promise((resolve, reject) => {
       import('/' + this.file('CX3_Shared/CX3_shared.mjs')).then((m) => {
@@ -154,7 +158,7 @@ Module.register('MMM-CalendarExt3Agenda', {
       this._domReady = resolve
     })
 
-    Promise.allSettled([_moduleLoaded, _domCreated]).then (() => {
+    Promise.allSettled([_moduleLoaded, _domCreated, _functionsRestored]).then (() => {
       this._ready = true
       this.library.prepareMagic()
       //let {payload, sender} = result[1].value
