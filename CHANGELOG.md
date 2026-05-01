@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.1](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/compare/v2.0.0...v2.0.1) (2026-05-01)
+
+
+### Fixed
+
+* **closure:** restore closure variable support in config callbacks ([27014af](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/27014af247044dacae3b93d01a8edd7c4940616a)), closes [#261](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/issues/261)
+
+
+### Tests
+
+* remove obsolete socketNotificationReceived tests ([72816f2](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/72816f263ecba2e60d9780a2c6a0e7b7d4c3670b))
+
 ## [2.0.0](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/compare/v1.6.1...v2.0.0) (2026-05-01)
 
 
