@@ -230,7 +230,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     dom.classList.add('bodice', 'CX3A_' + this.instanceId, 'CX3A')
     if (this.activeConfig.displayRepeatingCountTitle) dom.classList.add('displayRepeatingCountTitle')
     if (this.activeConfig.fontSize) dom.style.setProperty('--fontsize', this.activeConfig.fontSize)
-    if (!this.library?.loaded) {
+    if (!this.library?.loaded || !this._ready) {
       Log.warn('[CX3A] Module is not prepared yet, wait a while.')
       return dom
     }
