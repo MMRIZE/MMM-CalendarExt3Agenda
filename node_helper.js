@@ -70,6 +70,7 @@ module.exports = NodeHelper.create({
    */
   loadFunctionConfigs () {
     const functionKeys = [
+      "preProcessor",
       "eventTransformer",
       "eventFilter",
       "eventSorter",

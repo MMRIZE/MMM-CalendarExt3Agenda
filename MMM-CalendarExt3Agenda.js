@@ -69,7 +69,7 @@ Module.register('MMM-CalendarExt3Agenda', {
     if (notification !== "CX3A_FUNCTIONS_RESTORED") return
     if (payload.identifier !== this.identifier) return
 
-    const configKeys = ["eventTransformer", "eventFilter", "eventSorter"]
+    const configKeys = ["preProcessor", "eventTransformer", "eventFilter", "eventSorter"]
     const notificationKeys = ["eventPayload", "weatherPayload"]
     const preamble = payload.variablePreamble || ""
 
