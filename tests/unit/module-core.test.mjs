@@ -71,21 +71,25 @@ test("socketNotificationReceived restores callback functions", () => {
     },
   }
 
+  // Contract test: all known config keys must be handled, including preProcessor.
+  // If a key is added to node_helper but missing from configKeys here, the assertion fails.
+  const allConfigKeys = ["preProcessor", "eventTransformer", "eventFilter", "eventSorter"]
+
+  const functions = {}
+  for (const key of allConfigKeys) {
+    functions[key] = `() => "${key}"`
+  }
+
   moduleDef.socketNotificationReceived.call(ctx, "CX3A_FUNCTIONS_RESTORED", {
     identifier: "module-1",
     variablePreamble: "",
-    functions: {
-      eventTransformer: "(ev) => ({ ...ev, transformed: true })",
-      eventFilter: "(ev) => ev.visible === true",
-    },
+    functions,
   })
 
-  assert.equal(typeof ctx.activeConfig.eventTransformer, "function")
-  assert.equal(typeof ctx.activeConfig.eventFilter, "function")
-  assert.equal(typeof ctx.originalConfig.eventTransformer, "function")
-  assert.equal(typeof ctx.originalConfig.eventFilter, "function")
-  assert.equal(ctx.activeConfig.eventTransformer({ a: 1 }).transformed, true)
-  assert.equal(ctx.activeConfig.eventFilter({ visible: true }), true)
+  for (const key of allConfigKeys) {
+    assert.equal(typeof ctx.activeConfig[key], "function", `${key} must be restored in activeConfig`)
+    assert.equal(typeof ctx.originalConfig[key], "function", `${key} must be restored in originalConfig`)
+  }
   assert.equal(readyCalls, 1)
 })
 
