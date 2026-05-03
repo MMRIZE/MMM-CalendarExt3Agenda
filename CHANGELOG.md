@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.3](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/compare/v2.0.2...v2.0.3) (2026-05-03)
+
+
+### Fixed
+
+* **closure:** add preProcessor to serialized function keys ([7603799](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/7603799812053bc2db66a0403d01b81ecac3ace9)), closes [#261](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/issues/261)
+* **closure:** guard getDom against early render before functions restored ([5162a92](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/5162a927d17afd9dcff65f7e73e9f73412089945))
+
+
+### Tests
+
+* extend socketNotificationReceived test to cover all config keys ([fa672b2](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/commit/fa672b27a26af9bb4572615350b44888ae9b638c))
+
 ## [2.0.2](https://github.com/MMRIZE/MMM-CalendarExt3Agenda/compare/v2.0.1...v2.0.2) (2026-05-01)
 
 
